@@ -22,14 +22,6 @@
   <a href="https://mp.weixin.qq.com/s/QVF6upVMSbgvZy8lHZS3CQ"><img src="https://img.shields.io/badge/知识星球-代码随想录-blue" alt=""></a>
 </p>
 
-<p align="center"><strong>《代码随想录》正式出版啦！！录友专属福利，点击下方可以享五折优惠！详细可以<a href="https://programmercarl.com/other/publish.html">点击这里</a></strong></p>
-
-<p align="center">
-<a href="https://union-click.jd.com/jdc?e=&p=JF8BAMQJK1olXg8EUVhVCkkWAV8IGV8WVAICU24ZVxNJXF9RXh5UHw0cSgYYXBcIWDoXSQVJQwYAUF1UDEsQHDZNRwYlX0B9A1cfakpyYBkSRj4QKFBUEEAfaEcbM244GFIXWQYAUV5VOHsXBF9edVsUXAcDVVtdDUgnAl8IHFkdXw8KUl5fDkgRM2gIEmtIFVpKAxVtOHsUM184G2sWbURsVApfAR8XA2sLSw8cWA8LUw1ZCElHAmhdTAxGW1YBUlxtCkoWB2Y4" target="_blank">
-	<img src="https://code-thinking-1253855093.file.myqcloud.com/pics/20211213180559.png" width="400"/>
-</a>
-</p>
-
 
 # LeetCode 刷题攻略
 
@@ -293,7 +285,7 @@
 33. [二叉树：构造一棵搜索树](./problems/0108.将有序数组转换为二叉搜索树.md)
 34. [二叉树：搜索树转成累加树](./problems/0538.把二叉搜索树转换为累加树.md)
 35. [二叉树：总结篇！（需要掌握的二叉树技能都在这里了）](./problems/二叉树总结篇.md)
- 
+
 ## 回溯算法 
 
 题目分类大纲如下：             
