@@ -622,3 +622,356 @@ class Solution {
 }
 ```
 
+## 24. Swap Nodes in Pairs
+
+Given a linked list, swap every two adjacent nodes and return its head. You must solve the problem without modifying the values in the list's nodes (i.e., only nodes themselves may be changed.)
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2020/10/03/swap_ex1.jpg)
+
+```
+Input: head = [1,2,3,4]
+Output: [2,1,4,3]
+```
+
+**Example 2:**
+
+```
+Input: head = []
+Output: []
+```
+
+**Example 3:**
+
+```
+Input: head = [1]
+Output: [1]
+```
+
+
+
+## 19. Remove Nth Node From End of List
+
+Given the `head` of a linked list, remove the `nth` node from the end of the list and return its head.
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2020/10/03/remove_ex1.jpg)
+
+```
+Input: head = [1,2,3,4,5], n = 2
+Output: [1,2,3,5]
+```
+
+**Example 2:**
+
+```
+Input: head = [1], n = 1
+Output: []
+```
+
+**Example 3:**
+
+```
+Input: head = [1,2], n = 1
+Output: [1]
+```
+
+###  Solution:
+
+移除倒数第**2**个[3]
+
+```mermaid
+graph LR
+A[-1]-->B[1]-->C[2]-->D[3]-->E[4]-->F[null]
+```
+
+fast先动**2**轮
+
+```mermaid
+graph LR
+A[-1]-->B[1]-->C[2]-->D[3]-->E[4]-->F[null]
+
+fast-->B
+slow-->A
+```
+
+fast动到null slow动到要删除的位子 pre是slow前一个
+
+```mermaid
+graph LR
+A[-1]-->B[1]-->C[2]-->D[3]-->E[4]-->F[null]
+
+fast-->F
+slow-->E
+pre-->D
+```
+
+
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+
+        ListNode dummyNode = new ListNode(-1, head);
+        ListNode fast = dummyNode;
+        ListNode slow = dummyNode;
+        
+        for(int i=0; i<n; i++){
+            fast = fast.next;
+        }        
+        ListNode pre = null;
+        while(fast != null){
+            pre = slow;
+            fast = fast.next;
+            slow = slow.next;
+        }
+        
+        
+        pre.next = slow.next;
+        slow.next = null;
+        
+        
+        return dummyNode.next;
+        
+        
+    }
+}
+```
+
+## 160. Intersection of Two Linked Lists
+
+Given the heads of two singly linked-lists `headA` and `headB`, return *the node at which the two lists intersect*. If the two linked lists have no intersection at all, return `null`.
+
+For example, the following two linked lists begin to intersect at node `c1`:
+
+![img](https://assets.leetcode.com/uploads/2021/03/05/160_statement.png)
+
+The test cases are generated such that there are no cycles anywhere in the entire linked structure.
+
+**Note** that the linked lists must **retain their original structure** after the function returns.
+
+**Custom Judge:**
+
+The inputs to the **judge** are given as follows (your program is **not** given these inputs):
+
+- `intersectVal` - The value of the node where the intersection occurs. This is `0` if there is no intersected node.
+- `listA` - The first linked list.
+- `listB` - The second linked list.
+- `skipA` - The number of nodes to skip ahead in `listA` (starting from the head) to get to the intersected node.
+- `skipB` - The number of nodes to skip ahead in `listB` (starting from the head) to get to the intersected node.
+
+The judge will then create the linked structure based on these inputs and pass the two heads, `headA` and `headB` to your program. If you correctly return the intersected node, then your solution will be **accepted**.
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/03/05/160_example_1_1.png)
+
+```
+Input: intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5], skipA = 2, skipB = 3
+Output: Intersected at '8'
+Explanation: The intersected node's value is 8 (note that this must not be 0 if the two lists intersect).
+From the head of A, it reads as [4,1,8,4,5]. From the head of B, it reads as [5,6,1,8,4,5]. There are 2 nodes before the intersected node in A; There are 3 nodes before the intersected node in B.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2021/03/05/160_example_2.png)
+
+```
+Input: intersectVal = 2, listA = [1,9,1,2,4], listB = [3,2,4], skipA = 3, skipB = 1
+Output: Intersected at '2'
+Explanation: The intersected node's value is 2 (note that this must not be 0 if the two lists intersect).
+From the head of A, it reads as [1,9,1,2,4]. From the head of B, it reads as [3,2,4]. There are 3 nodes before the intersected node in A; There are 1 node before the intersected node in B.
+```
+
+**Example 3:**
+
+![img](https://assets.leetcode.com/uploads/2021/03/05/160_example_3.png)
+
+```
+Input: intersectVal = 0, listA = [2,6,4], listB = [1,5], skipA = 3, skipB = 2
+Output: No intersection
+Explanation: From the head of A, it reads as [2,6,4]. From the head of B, it reads as [1,5]. Since the two lists do not intersect, intersectVal must be 0, while skipA and skipB can be arbitrary values.
+Explanation: The two lists do not intersect, so return null.
+```
+
+### Solution:
+
+计算两个链表的差值，之后fast挪动差值，再找相同。
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode A = headA;
+        ListNode B = headB;
+        
+        int lenA = 0;
+        int lenB =0;
+        
+        while(A!=null){
+            lenA++;
+            A = A.next;
+        }
+        while(B!=null){
+            lenB++;
+            B = B.next;
+        }
+        
+        int dif = lenA - lenB;
+        if(dif<0){
+            A = headB;
+            B = headA;
+            dif = dif*-1;
+        }else{
+            A = headA;
+            B = headB;
+        }
+
+        for(int i=0; i<dif ;i++){
+            A = A.next;
+        }
+        
+        while(A!=null){
+            
+            if(A == B){
+                return A;
+            }
+            A = A.next;
+            B = B.next;
+        }
+        
+        return null;
+    }
+}
+```
+
+## 142. Linked List Cycle II
+
+Given the `head` of a linked list, return *the node where the cycle begins. If there is no cycle, return* `null`.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the `next` pointer. Internally, `pos` is used to denote the index of the node that tail's `next` pointer is connected to (**0-indexed**). It is `-1` if there is no cycle. **Note that** `pos` **is not passed as a parameter**.
+
+**Do not modify** the linked list.
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png)
+
+```
+Input: head = [3,2,0,-4], pos = 1
+Output: tail connects to node index 1
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+```
+
+**Example 2:**
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test2.png)
+
+```
+Input: head = [1,2], pos = 0
+Output: tail connects to node index 0
+Explanation: There is a cycle in the linked list, where tail connects to the first node.
+```
+
+**Example 3:**
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist_test3.png)
+
+```
+Input: head = [1], pos = -1
+Output: no cycle
+Explanation: There is no cycle in the linked list.
+```
+
+ 
+
+**Constraints:**
+
+- The number of the nodes in the list is in the range `[0, 104]`.
+- `-105 <= Node.val <= 105`
+- `pos` is `-1` or a **valid index** in the linked-list.
+
+## Solution
+
+fast指针比slow指针快一步，这样就能相遇
+
+```mermaid
+graph LR
+1-->2-->3-->4-->5-->6-->3
+```
+
+
+
+```java
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        
+        if( head == null ){
+            return null;
+        }
+        
+        while(fast!= null && fast.next !=null){
+            
+            fast = fast.next.next;
+            slow = slow.next;
+            if(fast == slow){
+                ListNode index1 = head;
+                ListNode index2 = fast;
+                while(index1 != index2){
+                    index1 = index1.next;
+                    index2 = index2.next;
+                }
+                return index1;
+            }
+            
+        }
+    
+        return null;
+    }
+}
+```
+
