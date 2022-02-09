@@ -975,17 +975,25 @@ public class Solution {
 }
 ```
 
+# 3.Hash Table
+
+##  242. Valid Anagram
+
+Given two strings `s` and `t`, return `true` *if* `t` *is an anagram of* `s`*, and* `false` *otherwise*.
+
+An **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
 ## 1002.Find Common Characters
 
 Given a string array `words`, return *an array of all characters that show up in all strings within the* `words` *(including duplicates)*. You may return the answer in **any order**.
-
- 
 
 **Example 1:**
 
 ```
 Input: words = ["bella","label","roller"]
 Output: ["e","l","l"]
+Input: s = "anagram", t = "nagaram"
+Output: true
 ```
 
 **Example 2:**
@@ -1043,4 +1051,6 @@ class Solution {
     }
 }
 ```
+
+
 
