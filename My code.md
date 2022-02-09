@@ -922,7 +922,7 @@ Explanation: There is no cycle in the linked list.
 - `-105 <= Node.val <= 105`
 - `pos` is `-1` or a **valid index** in the linked-list.
 
-## Solution
+### Solution
 
 fast指针比slow指针快一步，这样就能相遇
 
@@ -971,6 +971,75 @@ public class Solution {
         }
     
         return null;
+    }
+}
+```
+
+## 1002.Find Common Characters
+
+Given a string array `words`, return *an array of all characters that show up in all strings within the* `words` *(including duplicates)*. You may return the answer in **any order**.
+
+ 
+
+**Example 1:**
+
+```
+Input: words = ["bella","label","roller"]
+Output: ["e","l","l"]
+```
+
+**Example 2:**
+
+```
+Input: words = ["cool","lock","cook"]
+Output: ["c","o"]
+```
+
+### Solution
+
+```java
+class Solution {
+    public List<String> commonChars(String[] words) {
+         
+        int[] aph = new int[26];
+        
+        
+        if(words == null){
+            return null;
+        }
+        
+        String firstStr = words[0];
+        for(int i=0; i<firstStr.length();i++){
+            aph[firstStr.charAt(i)-'a']++;  
+        }     
+        
+        
+        for(String str : words){
+            
+            int[] temp = new int[26];
+            for(int i=0; i<str.length();i++){    
+                temp[str.charAt(i)-'a']++;       
+            }  
+            
+            for(int k=0; k<26; k++){
+                aph[k] = Math.min(temp[k],aph[k]);
+            }
+            //aph[str.charAt(i)-'a'] = Math.min(temp[str.charAt(i)-'a'],aph[str.charAt(i)-'a']);
+         }   
+        
+        List<String> result = new ArrayList<>();
+        
+        for( int i=0; i<26; i++){
+            
+            while(aph[i]!=0){
+                char c = (char)(i+'a');
+                String str = String.valueOf(c);
+                result.add(str);
+                aph[i] --;
+            }
+        }
+        return result;
+        
     }
 }
 ```
