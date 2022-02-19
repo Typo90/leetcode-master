@@ -1044,3 +1044,302 @@ class Solution {
 }
 ```
 
+## 202.Happy Number
+
+Write an algorithm to determine if a number `n` is happy.
+
+A **happy number** is a number defined by the following process:
+
+- Starting with any positive integer, replace the number by the sum of the squares of its digits.
+- Repeat the process until the number equals 1 (where it will stay), or it **loops endlessly in a cycle** which does not include 1.
+- Those numbers for which this process **ends in 1** are happy.
+
+Return `true` *if* `n` *is a happy number, and* `false` *if not*.
+
+ 
+
+**Example 1:**
+
+```
+Input: n = 19
+Output: true
+Explanation:
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+```
+
+**Example 2:**
+
+```
+Input: n = 2
+Output: false
+```
+
+### Solution
+
+```java
+class Solution {
+    public boolean isHappy(int n) {
+        
+        Set<Integer> record = new HashSet<>();
+        
+        while(!record.contains(n) ){
+            
+            record.add(n);
+            n = cal(n);
+            
+            if(n == 1){
+                return true;
+            }
+        }
+        
+        return false;
+        
+        
+
+    }
+    
+        private int cal(int n){
+            int sum = 0;
+            int temp = 0;
+            while(n!=0){
+                temp = (n%10)*(n%10);
+                sum += temp;
+                n = n/10;
+            }
+            
+            return sum;
+        }
+}
+```
+
+## 1.Two Sum
+
+Given an array of integers `nums` and an integer `target`, return *indices of the two numbers such that they add up to `target`*.
+
+You may assume that each input would have ***exactly\* one solution**, and you may not use the *same* element twice.
+
+You can return the answer in any order.
+
+ 
+
+**Example 1:**
+
+```
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+```
+
+**Example 2:**
+
+```
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+```
+
+**Example 3:**
+
+```
+Input: nums = [3,3], target = 6
+Output: [0,1]
+```
+
+ 
+
+**Constraints:**
+
+- `2 <= nums.length <= 104`
+- `-109 <= nums[i] <= 109`
+- `-109 <= target <= 109`
+- **Only one valid answer exists.**
+
+### Solution
+
+```java
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        
+        int[] res = new int[2];
+        if( nums==null || nums.length==0){
+            return res;
+        }
+        
+        Map<Integer, Integer> map = new HashMap<>();
+        
+        for(int i=0; i<nums.length; i++){
+            
+            int temp = target - nums[i];
+            
+            if(map.containsKey(temp)){
+                res[0] = i;
+                res[1] = map.get(temp);
+            }
+            
+            map.put(nums[i],i);
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+## 454. 4Sum II
+
+Given four integer arrays `nums1`, `nums2`, `nums3`, and `nums4` all of length `n`, return the number of tuples `(i, j, k, l)` such that:
+
+- `0 <= i, j, k, l < n`
+- `nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0`
+
+ 
+
+**Example 1:**
+
+```
+Input: nums1 = [1,2], nums2 = [-2,-1], nums3 = [-1,2], nums4 = [0,2]
+Output: 2
+Explanation:
+The two tuples are:
+1. (0, 0, 0, 1) -> nums1[0] + nums2[0] + nums3[0] + nums4[1] = 1 + (-2) + (-1) + 2 = 0
+2. (1, 1, 0, 0) -> nums1[1] + nums2[1] + nums3[0] + nums4[0] = 2 + (-1) + (-1) + 0 = 0
+```
+
+**Example 2:**
+
+```
+Input: nums1 = [0], nums2 = [0], nums3 = [0], nums4 = [0]
+Output: 1
+```
+
+ 
+
+**Constraints:**
+
+- `n == nums1.length`
+- `n == nums2.length`
+- `n == nums3.length`
+- `n == nums4.length`
+- `1 <= n <= 200`
+- `-228 <= nums1[i], nums2[i], nums3[i], nums4[i] <= 228`
+
+### Solution:
+
+nums1 = [1,2]
+
+nums2 = [-2,-1]
+
+1. temp = 1-2 = -1
+
+   map{ [-1,1]  }
+
+2. temp = 1-1=0
+
+   Map{ [-1,1], [0, 1]}
+
+   ``
+
+接下来后面两个数字只和 temp
+
+判断0-temp有几个加给count
+
+```java a
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        
+        Map<Integer, Integer> map = new HashMap<>();
+        int count = 0;
+        
+        for(int i: nums1){
+            for(int j : nums2){
+                
+                int temp = i+j;
+                if(!map.containsKey(temp)){
+                    
+                    map.put(temp,1);
+                }else{
+                    map.put(temp,map.get(temp)+1);
+                }
+                
+            }
+        }
+        
+        for(int i : nums3){
+            for(int j: nums4){
+                
+                int temp = i+j;
+                if(map.containsKey(0-temp)){
+                    count += map.get(0-temp);
+                }
+            }
+        }
+        
+        return count;
+    }
+}
+```
+
+## 383. Ransom Note
+
+Given two strings `ransomNote` and `magazine`, return `true` *if* `ransomNote` *can be constructed from* `magazine` *and* `false` *otherwise*.
+
+Each letter in `magazine` can only be used once in `ransomNote`.
+
+ 
+
+**Example 1:**
+
+```
+Input: ransomNote = "a", magazine = "b"
+Output: false
+```
+
+**Example 2:**
+
+```
+Input: ransomNote = "aa", magazine = "ab"
+Output: false
+```
+
+**Example 3:**
+
+```
+Input: ransomNote = "aa", magazine = "aab"
+Output: true
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= ransomNote.length, magazine.length <= 105`
+- `ransomNote` and `magazine` consist of lowercase English letters.
+
+## Solution
+
+```java
+class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
+        
+        int[] record = new int[26];
+        
+        for(int i=0; i<ransomNote.length(); i++){
+            record[ransomNote.charAt(i)-'a']++;
+        }
+        
+        for(int i=0; i<magazine.length(); i++){
+            record[magazine.charAt(i)-'a']--;
+        }
+        
+        for(int i=0; i<record.length; i++){
+            if(record[i]>0){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
