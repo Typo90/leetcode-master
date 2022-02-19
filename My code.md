@@ -975,17 +975,25 @@ public class Solution {
 }
 ```
 
+# 3.Hash Table
+
+##  242. Valid Anagram
+
+Given two strings `s` and `t`, return `true` *if* `t` *is an anagram of* `s`*, and* `false` *otherwise*.
+
+An **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
 ## 1002.Find Common Characters
 
 Given a string array `words`, return *an array of all characters that show up in all strings within the* `words` *(including duplicates)*. You may return the answer in **any order**.
-
- 
 
 **Example 1:**
 
 ```
 Input: words = ["bella","label","roller"]
 Output: ["e","l","l"]
+Input: s = "anagram", t = "nagaram"
+Output: true
 ```
 
 **Example 2:**
@@ -1041,7 +1049,7 @@ class Solution {
         return result;
         
     }
-}
+
 ```
 
 ## 202.Happy Number
@@ -1123,7 +1131,9 @@ You may assume that each input would have ***exactly\* one solution**, and you m
 
 You can return the answer in any order.
 
- 
+## 349.Intersection of Two Arrays
+
+Given two integer arrays `nums1` and `nums2`, return *an array of their intersection*. Each element in the result must be **unique** and you may return the result in **any order**.
 
 **Example 1:**
 
@@ -1131,11 +1141,15 @@ You can return the answer in any order.
 Input: nums = [2,7,11,15], target = 9
 Output: [0,1]
 Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2]
 ```
 
 **Example 2:**
 
 ```
+<<<<<<< HEAD
 Input: nums = [3,2,4], target = 6
 Output: [1,2]
 ```
@@ -1339,6 +1353,44 @@ class Solution {
             }
         }
         return true;
+      
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [9,4]
+Explanation: [4,9] is also accepted.
+```
+
+
+
+### Solution:
+
+```java
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> set1 = new HashSet<>();
+        Set<Integer> output = new HashSet<>();
+        
+        if(nums1 == null || nums2 == null){
+            return null;
+        }
+        
+        for(int i : nums1){
+            set1.add(i);
+        }
+        
+        for(int i : nums2){
+            if(set1.contains(i)){
+                output.add(i);
+            }
+        }
+        
+        int[] res = new int[output.size()];
+        int j=0;
+        for(int i : output){
+            res[j] = i;
+            j ++;
+        }
+        
+        return res;
     }
 }
 ```
