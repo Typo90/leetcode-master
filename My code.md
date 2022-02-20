@@ -1123,14 +1123,6 @@ class Solution {
 }
 ```
 
-## 1.Two Sum
-
-Given an array of integers `nums` and an integer `target`, return *indices of the two numbers such that they add up to `target`*.
-
-You may assume that each input would have ***exactly\* one solution**, and you may not use the *same* element twice.
-
-You can return the answer in any order.
-
 ## 349.Intersection of Two Arrays
 
 Given two integer arrays `nums1` and `nums2`, return *an array of their intersection*. Each element in the result must be **unique** and you may return the result in **any order**.
@@ -1149,7 +1141,6 @@ Output: [2]
 **Example 2:**
 
 ```
-<<<<<<< HEAD
 Input: nums = [3,2,4], target = 6
 Output: [1,2]
 ```
@@ -1169,6 +1160,50 @@ Output: [0,1]
 - `-109 <= nums[i] <= 109`
 - `-109 <= target <= 109`
 - **Only one valid answer exists.**
+
+
+
+### Solution:
+
+```java
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> set1 = new HashSet<>();
+        Set<Integer> output = new HashSet<>();
+        
+        if(nums1 == null || nums2 == null){
+            return null;
+        }
+        
+        for(int i : nums1){
+            set1.add(i);
+        }
+        
+        for(int i : nums2){
+            if(set1.contains(i)){
+                output.add(i);
+            }
+        }
+        
+        int[] res = new int[output.size()];
+        int j=0;
+        for(int i : output){
+            res[j] = i;
+            j ++;
+        }
+        
+        return res;
+    }
+}
+```
+
+## 1.Two Sum
+
+Given an array of integers `nums` and an integer `target`, return *indices of the two numbers such that they add up to `target`*.
+
+You may assume that each input would have ***exactly\* one solution**, and you may not use the *same* element twice.
+
+You can return the answer in any order.
 
 ### Solution
 
@@ -1331,7 +1366,7 @@ Output: true
 - `1 <= ransomNote.length, magazine.length <= 105`
 - `ransomNote` and `magazine` consist of lowercase English letters.
 
-## Solution
+### Solution
 
 ```java
 class Solution {
@@ -1359,39 +1394,4 @@ Output: [9,4]
 Explanation: [4,9] is also accepted.
 ```
 
-
-
-### Solution:
-
-```java
-class Solution {
-    public int[] intersection(int[] nums1, int[] nums2) {
-        Set<Integer> set1 = new HashSet<>();
-        Set<Integer> output = new HashSet<>();
-        
-        if(nums1 == null || nums2 == null){
-            return null;
-        }
-        
-        for(int i : nums1){
-            set1.add(i);
-        }
-        
-        for(int i : nums2){
-            if(set1.contains(i)){
-                output.add(i);
-            }
-        }
-        
-        int[] res = new int[output.size()];
-        int j=0;
-        for(int i : output){
-            res[j] = i;
-            j ++;
-        }
-        
-        return res;
-    }
-}
-```
 
