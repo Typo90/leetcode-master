@@ -1389,9 +1389,243 @@ class Solution {
         }
         return true;
       
-Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
-Output: [9,4]
-Explanation: [4,9] is also accepted.
 ```
 
+## 15. 3Sum
+
+Given an integer array nums, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.
+
+Notice that the solution set must not contain duplicate triplets.
+
+ 
+
+**Example 1:**
+
+```
+Input: nums = [-1,0,1,2,-1,-4]
+Output: [[-1,-1,2],[-1,0,1]]
+```
+
+**Example 2:**
+
+```
+Input: nums = []
+Output: []
+```
+
+**Example 3:**
+
+```
+Input: nums = [0]
+Output: []
+```
+
+ 
+
+**Constraints:**
+
+- `0 <= nums.length <= 3000`
+- `-105 <= nums[i] <= 105`
+
+### Solution
+
+```java
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        
+        if(nums.length == 0 || nums == null){
+            return res;
+        }
+        
+        Arrays.sort(nums);
+        
+        for(int i=0; i<nums.length; i++){
+            
+            if(nums[i]>0){
+                return res;
+            }
+            
+            if(i>0 && nums[i]==nums[i-1]){
+                continue;
+            }
+            
+            int left = i+1;
+            int right = nums.length-1;
+            
+            while(left<right){
+                
+                int sum = nums[left] + nums[right] + nums[i];
+                if(sum>0){
+                    right --;
+                }else if(sum<0){
+                    left ++;
+                }else{
+                    res.add(Arrays.asList(nums[i],nums[left],nums[right]));
+                     
+                
+                while (right > left && nums[right] == nums[right - 1]) right--;
+                while (right > left && nums[left] == nums[left + 1]) left++;
+                
+                
+                right --;
+                left ++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+## 18 4Sum
+
+Given an array `nums` of `n` integers, return *an array of all the **unique** quadruplets* `[nums[a], nums[b], nums[c], nums[d]]` such that:
+
+- `0 <= a, b, c, d < n`
+- `a`, `b`, `c`, and `d` are **distinct**.
+- `nums[a] + nums[b] + nums[c] + nums[d] == target`
+
+You may return the answer in **any order**.
+
+ 
+
+**Example 1:**
+
+```
+Input: nums = [1,0,-1,0,-2,2], target = 0
+Output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+```
+
+**Example 2:**
+
+```
+Input: nums = [2,2,2,2,2], target = 8
+Output: [[2,2,2,2]]
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= nums.length <= 200`
+- `-109 <= nums[i] <= 109`
+- `-109 <= target <= 109`
+
+### Solution
+
+```java
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        
+        if(nums.length==0 || nums.length == 0){
+            return res;
+        }
+        
+        Arrays.sort(nums);
+        
+        for(int i=0; i<nums.length; i++){
+            
+            if(i>0 && nums[i]==nums[i-1]){
+                continue;
+            }
+            
+            for(int j=i+1; j<nums.length; j++){
+                
+                if(j>i+1 && nums[j]==nums[j-1]){
+                    continue;
+                }
+                
+                int left = j+1;
+                int right = nums.length - 1;
+                
+                while(left < right){
+                    
+                    int sum = nums[i]+nums[j]+nums[left]+nums[right];
+                    
+                    if(sum>target){
+                        right--;
+                    }else if(sum<target){
+                        left ++;
+                    }else{
+                        res.add(Arrays.asList(nums[i],nums[j],nums[left],nums[right]));
+                        
+                        while(left<right && nums[right]==nums[right-1]) right--;
+                        while(left<right && nums[left]==nums[left+1]) left++;
+                        
+                        right --;
+                        left ++;
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        return res;
+        
+    }
+}
+```
+
+# 4. String
+
+### 344. Reverse String
+
+Write a function that reverses a string. The input string is given as an array of characters `s`.
+
+You must do this by modifying the input array [in-place](https://en.wikipedia.org/wiki/In-place_algorithm) with `O(1)` extra memory.
+
+ 
+
+**Example 1:**
+
+```
+Input: s = ["h","e","l","l","o"]
+Output: ["o","l","l","e","h"]
+```
+
+**Example 2:**
+
+```
+Input: s = ["H","a","n","n","a","h"]
+Output: ["h","a","n","n","a","H"]
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= s.length <= 105`
+- `s[i]` is a [printable ascii character](https://en.wikipedia.org/wiki/ASCII#Printable_characters).
+
+#### Solution
+
+双指针过于简单不再赘述
+
+```java
+class Solution {
+    public void reverseString(char[] s) {
+        
+        int left = 0;
+        int right = s.length-1;
+        
+        while(left<right){
+            
+            char temp = s[left];
+            s[left] = s[right];
+            s[right] = temp;
+            
+            left++;
+            right--;
+            
+        }
+        
+    }
+}
+```
 
