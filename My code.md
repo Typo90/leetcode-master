@@ -1629,3 +1629,314 @@ class Solution {
 }
 ```
 
+
+
+### 20. Valid Parentheses
+
+Given a string `s` containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.
+
+An input string is valid if:
+
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+
+ 
+
+**Example 1:**
+
+```
+Input: s = "()"
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: s = "()[]{}"
+Output: true
+```
+
+**Example 3:**
+
+```
+Input: s = "(]"
+Output: false
+```
+
+**Constraints:**
+
+- `1 <= s.length <= 104`
+- `s` consists of parentheses only `'()[]{}'`.
+
+#### Solution
+
+```java
+class Solution {
+    public boolean isValid(String s) {
+        
+        Stack<Character> stack = new Stack<>();
+        
+        /*if(s==null){
+            return false;
+        }
+        
+        if(s.length()==0){
+            return false;
+        }*/
+        
+        for(int i = 0; i<s.length(); i++){
+            
+            /*if(i==0){
+                stack.push(s.charAt(i)); 
+                continue;
+            }*/
+            
+            
+            if(!stack.isEmpty()&&stack.peek()=='('&&s.charAt(i)==')'){
+                stack.pop();
+                continue;
+            }else if(!stack.isEmpty()&&stack.peek()=='{'&&s.charAt(i)=='}'){
+                stack.pop();
+                continue;
+            }else if(!stack.isEmpty()&&stack.peek()=='['&&s.charAt(i)==']'){
+                stack.pop();
+                continue;    
+            }else{
+               stack.push(s.charAt(i)); 
+            }
+
+            
+        }
+        
+        if(stack.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+        
+        
+    }
+}
+```
+
+# 6. Stack and Queue
+
+### 1047 Remove All Adjacent Duplicates In String
+
+You are given a string `s` consisting of lowercase English letters. A **duplicate removal** consists of choosing two **adjacent** and **equal** letters and removing them.
+
+We repeatedly make **duplicate removals** on `s` until we no longer can.
+
+Return *the final string after all such duplicate removals have been made*. It can be proven that the answer is **unique**.
+
+ 
+
+**Example 1:**
+
+```
+Input: s = "abbaca"
+Output: "ca"
+Explanation: 
+For example, in "abbaca" we could remove "bb" since the letters are adjacent and equal, and this is the only possible move.  The result of this move is that the string is "aaca", of which only "aa" is possible, so the final string is "ca".
+```
+
+**Example 2:**
+
+```
+Input: s = "azxxzy"
+Output: "ay"
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= s.length <= 105`
+- `s` consists of lowercase English letters.
+
+#### Solution
+
+```java
+class Solution {
+    public String removeDuplicates(String s) {
+        
+        Stack<Character> stack = new Stack<>();
+        
+        for(int i=0; i<s.length(); i++){
+            
+            char ch = s.charAt(i);
+            
+            if(!stack.isEmpty()&&stack.peek()==ch){
+                stack.pop();
+            }else{
+                stack.push(ch);
+            }
+        }
+        
+        String res = "";
+        while(!stack.isEmpty()){
+            res = stack.pop() + res;
+        }
+        
+        return res;
+        
+    }
+}
+```
+
+更简洁的一种写法
+
+```java
+class Solution {
+    public String removeDuplicates(String s) {
+        
+        Stack<Character> stack = new Stack<>();
+        
+        for(int i =0; i<s.length(); i++){
+            
+            char ch = s.charAt(i);
+            
+            if(stack.isEmpty()||stack.peek()!=ch){
+                stack.push(ch);
+            }else{
+                stack.pop();
+            }
+        }
+        
+        String res = "";
+        while(!stack.isEmpty()){
+            res = stack.pop()+res;
+        }
+        return res;
+    }
+}
+```
+
+### 150 Evaluate Reverse Polish Notation
+
+Evaluate the value of an arithmetic expression in [Reverse Polish Notation](http://en.wikipedia.org/wiki/Reverse_Polish_notation).
+
+Valid operators are `+`, `-`, `*`, and `/`. Each operand may be an integer or another expression.
+
+**Note** that division between two integers should truncate toward zero.
+
+It is guaranteed that the given RPN expression is always valid. That means the expression would always evaluate to a result, and there will not be any division by zero operation.
+
+ 
+
+**Example 1:**
+
+```
+Input: tokens = ["2","1","+","3","*"]
+Output: 9
+Explanation: ((2 + 1) * 3) = 9
+```
+
+**Example 2:**
+
+```
+Input: tokens = ["4","13","5","/","+"]
+Output: 6
+Explanation: (4 + (13 / 5)) = 6
+```
+
+**Example 3:**
+
+```
+Input: tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
+Output: 22
+Explanation: ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
+= ((10 * (6 / (12 * -11))) + 17) + 5
+= ((10 * (6 / -132)) + 17) + 5
+= ((10 * 0) + 17) + 5
+= (0 + 17) + 5
+= 17 + 5
+= 22
+```
+
+ 
+
+**Constraints:**
+
+- `1 <= tokens.length <= 104`
+- `tokens[i]` is either an operator: `"+"`, `"-"`, `"*"`, or `"/"`, or an integer in the range `[-200, 200]`.
+
+#### **Solution**
+
+```java
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Deque<Integer> stack = new LinkedList<>();
+        
+        for(int i=0; i<tokens.length; i++){
+            
+            
+            if(tokens[i].equals("+") || tokens[i].equals("-")||tokens[i].equals("*")||tokens[i].equals("/")){
+                
+                int a = stack.peek();
+                stack.pop();
+                int b = stack.peek();
+                stack.pop();
+
+                
+                if(tokens[i].equals("+")){
+                    int c = b+a;
+                    stack.push(c);
+                }else if(tokens[i].equals("-")){
+                    int c = b-a;
+                    stack.push(c);
+                }else if(tokens[i].equals("*")){
+                    int c = b*a;
+                    stack.push(c);
+                }else if(tokens[i].equals("/")){
+                    int c = b/a;
+                    stack.push(c);
+                }
+                
+            }else{
+                String t = tokens[i];
+                int temp = Integer.valueOf(t);
+                stack.push(temp);
+            }
+            
+        }
+        
+        return stack.peek();
+    }
+}
+```
+
+### 239 Sliding Window Maximus
+
+暴力法
+
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        
+        int left = 0;
+        int right = left+k-1;
+        
+        int[]res = new int[nums.length-k+1];
+        
+        while(right<nums.length){
+            
+            int max = nums[left];
+            for(int i =left; i<=right; i++){
+                
+                if(nums[i]>=max){
+                    max = nums[i];
+                }
+            }
+            res[left] = max;
+            
+            
+            left++;
+            right++;
+        }
+
+        return res;
+    }
+}
+```
+
