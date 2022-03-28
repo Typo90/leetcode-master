@@ -2123,3 +2123,286 @@ class Solution {
 }
 ```
 
+# 7. Binary Tree
+
+## [144. 二叉树的前序遍历](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+
+难度简单775收藏分享切换为英文接收动态反馈
+
+给你二叉树的根节点 `root` ，返回它节点值的 **前序** 遍历。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/09/15/inorder_1.jpg)
+
+```
+输入：root = [1,null,2,3]
+输出：[1,2,3]
+```
+
+**示例 2：**
+
+```
+输入：root = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：root = [1]
+输出：[1]
+```
+
+**示例 4：**
+
+![img](https://assets.leetcode.com/uploads/2020/09/15/inorder_5.jpg)
+
+```
+输入：root = [1,2]
+输出：[1,2]
+```
+
+**示例 5：**
+
+![img](https://assets.leetcode.com/uploads/2020/09/15/inorder_4.jpg)
+
+```
+输入：root = [1,null,2]
+输出：[1,2]
+```
+
+ 
+
+**提示：**
+
+- 树中节点数目在范围 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+### Solution
+
+前序遍历从root到left， left视为root，直到走完，再走right
+
+![图1 前序遍历](https://bkimg.cdn.bcebos.com/pic/3c6d55fbb2fb4316e5bfe05020a4462309f7d37c?x-bce-process=image/resize,m_lfit,w_440,limit_1/format,f_auto)
+
+首先访问A
+
+之后访问B
+
+再访问D
+
+之后E
+
+之后C
+
+之后F
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+
+        ArrayList<Integer> res = new ArrayList<>();
+        preOrder(root, res);
+
+        return res;
+
+
+
+    }
+            void preOrder(TreeNode root, ArrayList<Integer> res){
+
+            if(root == null){
+                return;
+            }
+            res.add(root.val);
+            preOrder(root.left, res);
+            preOrder(root.right, res);
+
+        }
+}
+```
+
+## [145. 二叉树的后序遍历](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+
+难度简单794收藏分享切换为英文接收动态反馈
+
+给你一棵二叉树的根节点 `root` ，返回其节点值的 **后序遍历** 。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/08/28/pre1.jpg)
+
+```
+输入：root = [1,null,2,3]
+输出：[3,2,1]
+```
+
+**示例 2：**
+
+```
+输入：root = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：root = [1]
+输出：[1]
+```
+
+ 
+
+**提示：**
+
+- 树中节点的数目在范围 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+### Solution
+
+后序遍历
+
+![图1](https://bkimg.cdn.bcebos.com/pic/4034970a304e251f1510e448a586c9177e3e539e?x-bce-process=image/resize,m_lfit,w_440,limit_1/format,f_auto)
+
+DEBFCA
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        
+        ArrayList<Integer> res = new ArrayList<>();
+        postOrder(root, res);
+
+        return res;
+
+    }
+
+    void postOrder(TreeNode root, ArrayList<Integer> res){
+
+        if(root==null){
+            return;
+        }
+
+        postOrder(root.left, res);
+        postOrder(root.right, res);
+        res.add(root.val);
+    }
+}
+```
+
+## [94. 二叉树的中序遍历](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+
+难度简单1343收藏分享切换为英文接收动态反馈
+
+给定一个二叉树的根节点 `root` ，返回 *它的 **中序** 遍历* 。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/09/15/inorder_1.jpg)
+
+```
+输入：root = [1,null,2,3]
+输出：[1,3,2]
+```
+
+**示例 2：**
+
+```
+输入：root = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：root = [1]
+输出：[1]
+```
+
+ 
+
+**提示：**
+
+- 树中节点数目在范围 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+### Solution
+
+![图1](https://bkimg.cdn.bcebos.com/pic/4034970a304e251f1510e448a586c9177e3e539e?x-bce-process=image/resize,m_lfit,w_440,limit_1/format,f_auto)
+
+DBEAFC
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        ArrayList<Integer> res = new ArrayList<>();
+        inOrder(root, res);
+        return res;
+    }
+
+    void inOrder(TreeNode root, ArrayList<Integer> res){
+
+        if(root == null){
+            return;
+        }
+
+        inOrder(root.left, res);
+        res.add(root.val);
+        inOrder(root.right, res);
+
+
+    }
+}
+```
+
