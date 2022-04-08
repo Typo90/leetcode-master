@@ -2406,3 +2406,567 @@ class Solution {
 }
 ```
 
+# 层序遍历合集
+
+Given the `root` of a binary tree, return *the level order traversal of its nodes' values*. (i.e., from left to right, level by level).
+
+ 
+
+**Example 1:**
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg)
+
+```
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[9,20],[15,7]]
+```
+
+**Example 2:**
+
+```
+Input: root = [1]
+Output: [[1]]
+```
+
+**Example 3:**
+
+```
+Input: root = []
+Output: []
+```
+
+
+
+**Constraints:**
+
+- The number of nodes in the tree is in the range `[0, 2000]`.
+- `-1000 <= Node.val <= 1000`
+
+## 102. Binary Tree Level Order Traversal
+
+### Solution
+
+BFS，通过que代替stack，每层遍历后加入数组
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+                
+        Queue<TreeNode> que = new LinkedList<>(); 
+        
+        if(root == null){
+            
+            return res;
+        }
+        
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            
+            ArrayList<Integer>level = new ArrayList<>();
+                
+            for(int len = que.size(); len>0; len--){
+                
+                TreeNode node = que.peek();
+                que.poll();
+                level.add(node.val);
+                
+                if(node.left != null){
+                    que.add(node.left);
+                }
+                
+                if(node.right != null){  
+                   que.add(node.right); 
+                }
+                
+                
+            }   
+            
+            res.add(level);
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+## 107.Binary Tree Level Order Traversal II
+
+### Solution:
+
+和102完全一致，多一步反转结果list
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        
+        Queue<TreeNode> que = new LinkedList<>();
+        
+        if(root == null){
+            return res;
+        }
+        
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            
+            ArrayList<Integer> level = new ArrayList<>();
+            
+            for(int len = que.size(); len>0; len--){
+                
+                TreeNode node = que.peek();
+                que.poll();
+                level.add(node.val);
+                
+                if(node.left != null){
+                    que.add(node.left);
+                }
+                
+                if(node.right != null){
+                    que.add(node.right);
+                }
+                
+                
+            }
+            
+            res.add(level);      
+            
+        }
+        
+       Collections.reverse(res);
+        
+        return res;
+        
+    }
+}
+```
+
+## 637. Average of Levels in Binary Tree
+
+### Solution:
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Double> averageOfLevels(TreeNode root) {
+        
+        ArrayList<Double> res = new ArrayList<>();
+        
+        Queue<TreeNode> que = new LinkedList<>();
+        
+        if(root == null){
+            return res;
+        }
+        
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            
+            double sum = 0;
+            int length = que.size();
+            
+            for(int len = que.size(); len>0; len--){
+                TreeNode node = que.peek();
+                que.poll();
+                sum += node.val;
+                
+                if(node.left != null){
+                    que.add(node.left);
+                }
+                if(node.right != null){
+                    que.add(node.right);
+                }
+            }
+            
+            res.add(sum/=length);
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+## 429.N-ary Tree Level Order Traversal
+
+### Solution:
+
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+class Solution {
+    public List<List<Integer>> levelOrder(Node root) {
+    
+        List<List<Integer>> res = new ArrayList<>();
+        
+        Queue<Node> que = new LinkedList<>();
+        
+        if(root == null){
+            return res;
+        }
+        
+        que.add(root);
+        
+        
+        while(!que.isEmpty()){
+            
+            ArrayList<Integer> level = new ArrayList<>();
+            
+            for(int len= que.size(); len>0; len--){
+                Node node = que.peek();
+                que.poll();
+                
+                level.add(node.val);
+                
+                int count = 0;
+                while(node.children != null && count != node.children.size()){
+                    //node.children.get(1);
+                    que.add(node.children.get(count));
+                    count ++;
+                }
+
+            }
+            
+            res.add(level);
+            
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+## 515. Find Largest Value in Each Tree Row
+
+### Solution:
+
+记住最小值是-Integer.MAX_VALUE-1
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> largestValues(TreeNode root) {
+        
+        ArrayList<Integer> res = new ArrayList<>();
+        
+        Queue<TreeNode> que = new LinkedList<>();
+        
+        if(root == null){
+            return res;
+        }
+        
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            
+            int min = -Integer.MAX_VALUE-1;
+            
+            for(int len=que.size(); len>0; len--){
+                
+                TreeNode node = que.peek();
+                que.poll();
+                
+                if(node.val>min){
+                    min = node.val;
+                }
+                if(node.left != null){
+                    que.add(node.left);
+                }
+                
+                if(node.right != null){
+                    que.add(node.right);
+                }
+                               
+            }
+            
+            res.add(min);
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+## 116. Populating Next Right Pointers in Each Node
+
+### Solution
+
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+    
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+*/
+
+class Solution {
+    public Node connect(Node root) {
+        
+        Queue<Node> que = new LinkedList<>();
+        
+        if(root != null){
+            que.add(root);
+        }
+        
+        while(!que.isEmpty()){
+            
+            
+            for(int len=que.size(); len>0; len--){
+                Node tmpNode = que.peek();
+                que.poll();
+                
+                if(tmpNode.left != null){
+                    que.add(tmpNode.left);
+                }
+                
+                if(tmpNode.right != null){
+                    que.add(tmpNode.right);
+                }
+                
+                if(len==1){
+                    tmpNode.next = null;
+                }else{
+                    tmpNode.next = que.peek();
+                }
+            }
+            
+            
+        }
+        
+        
+        return root;
+    }
+}
+```
+
+## 117. Populating Next Right Pointers in Each Node II
+
+### Solution
+
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+    
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+*/
+
+class Solution {
+    public Node connect(Node root) {
+        
+        Queue<Node> que = new LinkedList<>();
+        if(root != null){
+            que.add(root);
+        }else{
+            return root;
+        }
+        
+        while(!que.isEmpty()){
+            
+            for(int len = que.size(); len>0; len--){
+                
+                Node node = que.poll();
+                
+                if(node.left != null){
+                    que.add(node.left);
+                }
+                
+                if(node.right != null){
+                    que.add(node.right);
+                }
+                
+                if(len==1){
+                    node.next = null;
+                }else{
+                    node.next = que.peek();
+                }
+                
+            }
+            
+        }
+        
+        return root;
+        
+    }
+}
+```
+
+## 111. Minimum Depth of Binary Tree
+
+### Solution
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int minDepth(TreeNode root) {
+        
+        Queue<TreeNode> que = new LinkedList<>();
+        
+        
+        int res = 1;
+        
+        if(root==null){
+            return 0;
+        }
+        
+        if(root!=null){
+            que.add(root);
+        }
+        
+        while(!que.isEmpty()){
+            
+            for(int len=que.size(); len>0; len--){
+                
+                TreeNode node = que.poll();
+                
+                if(node.left == null && node.right == null){
+                    return res;
+                }
+                
+                if(node.left != null){
+                    que.add(node.left);
+                }
+                
+                if(node.right != null){
+                    que.add(node.right);
+                }
+                
+            }
+            
+            res +=1;
+        }
+        
+        
+        return res;
+        
+    }
+}
+```
+
