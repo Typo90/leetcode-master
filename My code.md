@@ -2970,3 +2970,354 @@ class Solution {
 }
 ```
 
+## 559. Maximum Depth of N-ary Tree
+
+### Solution
+
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+class Solution {
+    public int maxDepth(Node root) {
+        
+        int res = 0;
+        
+        if(root==null){
+            return res;
+        }  
+        
+        Queue<Node> que = new LinkedList<>();
+        
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            
+            for(int len = que.size(); len>0; len--){
+                
+                Node node = que.poll();
+                
+                
+                for(Node n : node.children){
+                    
+                    if(n!=null){
+                        que.add(n);
+                    }
+                }
+
+            }
+            
+            res++;
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+
+
+# 后序遍历判断树是否相同
+
+## 101. Symmetric Tree
+
+**Solution:**
+
+后续遍历，BFS
+
+判断左右节点是否相等
+
+leftNode.val == rightNode.val
+
+que里加leftNode.left, rightNode.right
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        
+        Queue<TreeNode> que = new LinkedList<>();
+        que.add(root.left);
+        que.add(root.right);
+        
+        while(!que.isEmpty()){
+            
+            TreeNode leftNode = que.poll();
+            TreeNode rightNode = que.poll();
+            
+            if(leftNode == null && rightNode == null){
+                continue;
+            }
+            
+            if(leftNode == null && rightNode != null){
+                return false;
+            }
+            
+            if(leftNode != null && rightNode == null){
+                return false;
+            }
+            
+            if(leftNode.val != rightNode.val){
+                return false;
+            }
+            
+            que.add(leftNode.left);
+            que.add(rightNode.right);
+            que.add(leftNode.right);
+            que.add(rightNode.left);
+            
+        }
+        
+        return true;
+        
+    }
+}
+```
+
+## 100. Same Tree
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        
+        Queue<TreeNode> que = new LinkedList<>();
+        que.add(p);
+        que.add(q);
+        
+        while(!que.isEmpty()){
+            
+            TreeNode leftNode = que.poll();
+            TreeNode rightNode = que.poll();
+            
+            if(leftNode == null && rightNode == null){
+                continue;
+            }
+            
+            if(leftNode == null && rightNode != null){
+                return false;
+            }            
+            
+            if(leftNode != null && rightNode == null){
+                return false;
+            }
+            
+            if(leftNode.val != rightNode.val){
+                return false;
+            }
+            
+
+            
+            que.add(leftNode.left);
+            que.add(rightNode.left);
+            que.add(leftNode.right);
+            que.add(rightNode.right);
+            
+        }
+        
+        return true;
+    }
+}
+```
+
+## 572. Subtree of Another Tree
+
+先找到origin和subroot相同的值
+
+之后和symmertri tree判断一样
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+    
+        Queue<TreeNode> que = new LinkedList<>();
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            
+            TreeNode origin = que.poll();
+            
+            if(origin!= null && origin.val == subRoot.val ){
+                
+                if(isSame(origin, subRoot)==true){
+                    return true;
+                }
+                
+            }
+            
+            if(origin.left != null){
+                que.add(origin.left);
+            }
+            if(origin.right!=null){
+                que.add(origin.right);
+            }
+            
+        }
+        
+        return false;
+        
+    }
+    
+    public boolean isSame(TreeNode origin, TreeNode subRoot){
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(origin);
+        q.add(subRoot);
+                
+        while(!q.isEmpty()){
+
+            TreeNode leftNode = q.poll();
+            TreeNode rightNode = q.poll();
+
+            if(leftNode == null && rightNode == null){
+                continue;
+            }
+
+            if(leftNode == null && rightNode != null){
+                return false;
+            }            
+
+            if(leftNode != null && rightNode == null){
+                return false;
+            }
+
+            if(leftNode.val != rightNode.val){
+                return false;
+            }
+
+            q.add(leftNode.left);
+            q.add(rightNode.left);
+            q.add(leftNode.right);
+            q.add(rightNode.right);
+
+        }
+        return true;
+    }
+}
+```
+
+# 
+
+
+
+## 257 Binary Tree Paths
+
+带一丢丢回溯思想？
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+    
+        List<String> res = new ArrayList<>();
+        
+        Stack<TreeNode> stack = new Stack<>();
+        Stack<String> path = new Stack<>();
+        
+        if(root == null){
+            return res;
+        }
+        
+        stack.push(root);
+        path.push(root.val+"");
+        
+        while(!stack.isEmpty()){
+            
+            TreeNode node = stack.pop();
+            String s = path.pop();
+            
+            if(node.left==null&&node.right==null){
+                res.add(s);
+            }
+            
+            if(node.right!=null){
+                stack.push(node.right);
+                path.push(s+"->"+node.right.val);
+            }
+            
+            if(node.left!=null){
+                stack.push(node.left);
+                path.push(s+"->"+node.left.val);
+            }            
+            
+            
+        }
+        
+        return res;
+    }
+}
+```
+
