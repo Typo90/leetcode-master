@@ -3257,7 +3257,7 @@ class Solution {
 
 # 
 
-
+# -------
 
 ## 257 Binary Tree Paths
 
@@ -3317,6 +3317,455 @@ class Solution {
         }
         
         return res;
+    }
+}
+```
+
+## 404. Sum of Left Leaves
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        int sum = 0;
+        if(root == null){
+            return sum;
+        }
+        
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        
+        while(!stack.isEmpty()){
+            
+            TreeNode node = stack.pop();
+            
+            if(node.left!=null&&node.left.left==null&&node.left.right==null){
+                sum+=node.left.val;
+            }
+            
+            if(node.right!=null){
+                stack.push(node.right);
+            }
+            if(node.left!=null){
+                stack.push(node.left);
+            }
+        }
+        
+        return sum;
+    }
+}
+```
+
+## 513. Find Bottom Left Tree Value
+
+取值 从right 到left入que
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int findBottomLeftValue(TreeNode root) {
+        int res = 0;
+        
+        if(root == null){
+            return res;
+        }
+        
+        res = root.val;
+        Queue<TreeNode> que = new LinkedList<>();
+        que.offer(root);
+        while(!que.isEmpty()){
+            
+            for(int len =que.size(); len>0; len--){
+                
+                TreeNode node = que.poll();
+                res = node.val;
+                
+                
+                if(node.right!=null){
+                    que.offer(node.right);
+                }
+                if(node.left!=null){
+                    que.offer(node.left);
+                    res = node.left.val;
+                }
+                
+            }
+            
+            
+        }
+        return res;
+    }
+}
+```
+
+## 112. Path Sum
+
+（深度遍历）前序遍历
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+            
+        
+        if(root == null){
+            return false;    
+        }
+        
+        Stack<TreeNode> stack = new Stack<>();
+        Stack<Integer> path = new Stack<>();
+        
+        stack.push(root);
+        path.push(root.val);
+
+        
+        while(!stack.isEmpty()){
+            
+            TreeNode node = stack.pop();
+            int sum = path.pop();
+
+            
+            if(node.left==null&node.right==null&&sum==targetSum){
+                return true;
+            }
+            
+            if(node.right!=null){
+                stack.push(node.right);
+                path.push(sum+node.right.val);
+            }
+            
+            if(node.left!=null){
+                stack.push(node.left);
+                path.push(sum+node.left.val);
+            }
+            
+        }
+        
+        return false;
+    }
+}
+```
+
+## *113
+
+# 构建二叉树，后序转前序
+
+## 106. Construct Binary Tree from Inorder and Postorder Traversal
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+/*
+* 第一步：如果数组大小为零的话，说明是空节点了。
+
+* 第二步：如果不为空，那么取后序数组最后一个元素作为节点元素。
+
+* 第三步：找到后序数组最后一个元素在中序数组的位置，作为切割点
+
+* 第四步：切割中序数组，切成中序左数组和中序右数组 （顺序别搞反了，一定是先切中序数组）
+
+* 第五步：切割后序数组，切成后序左数组和后序右数组
+
+* 第六步：递归处理左区间和右区间
+
+*/
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+    
+        return build(inorder, 0, inorder.length, postorder, 0, postorder.length);
+        
+    }
+    public TreeNode build(int[] inorder, int inLeft, int inRight, int[]postorder, int postLeft, int postRight){
+        
+        if(inRight - inLeft <1){
+            return null;
+        }
+        
+        if(inRight - inLeft == 1){
+            return new TreeNode(inorder[inLeft]);
+        }
+        
+        int rootVal = postorder[postRight-1];
+        TreeNode root = new TreeNode(rootVal);
+        int index = 0;
+        for(int i =inLeft; i<inRight; i++){
+            
+            if(inorder[i]==root.val){
+                index = i;
+                break;
+            }
+        }
+        
+        root.left = build(inorder, inLeft, index, postorder, postLeft, postLeft+(index-inLeft) );
+        root.right = build(inorder, index+1, inRight, postorder, postLeft+(index-inLeft), postRight-1 );
+        return root;
+    }
+}
+```
+
+## *105 Construct Binary Tree from Preorder and Inorder Traversal
+
+**二叉树前序遍历的顺序为：**
+
+先遍历根节点；
+
+随后递归地遍历左子树；
+
+最后递归地遍历右子树。
+
+**二叉树中序遍历的顺序为：**
+
+先递归地遍历左子树；
+
+随后遍历根节点；
+
+最后递归地遍历右子树。
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return helper(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    public TreeNode helper(int[] preorder, int preLeft, int preRight,
+                           int[] inorder, int inLeft, int inRight) {
+        // 递归终止条件
+        if (inLeft > inRight || preLeft > preRight) return null;
+
+        // val 为前序遍历第一个的值，也即是根节点的值
+        // idx 为根据根节点的值来找中序遍历的下标
+        int idx = inLeft, val = preorder[preLeft];
+        TreeNode root = new TreeNode(val);
+        for (int i = inLeft; i <= inRight; i++) {
+            if (inorder[i] == val) {
+                idx = i;
+                break;
+            }
+        }
+
+        // 根据 idx 来递归找左右子树
+        root.left = helper(preorder, preLeft + 1, preLeft + (idx - inLeft),
+                         inorder, inLeft, idx - 1);
+        root.right = helper(preorder, preLeft + (idx - inLeft) + 1, preRight,
+                         inorder, idx + 1, inRight);
+        return root;
+    }
+}
+```
+
+## 654. Maximum Binary Tree
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        
+        return build(nums, 0, nums.length);
+    }
+    
+    public TreeNode build(int[]nums, int left, int right){
+        
+        if(right-left<1){
+            return null;
+        }
+        if(right-left==1){
+            return new TreeNode(nums[left]);
+        }
+        
+        
+        int index = 0;
+        int maxVal = 0;
+        for(int i = left; i<right; i++){
+            if(nums[i]>maxVal){
+                maxVal = nums[i];
+                index = i;
+            }    
+        }
+        
+        TreeNode root = new TreeNode(maxVal);
+        
+        root.left = build(nums, left, index);
+        root.right = build(nums,index+1, right);
+        
+        return root;
+        
+        
+    }
+}
+```
+
+# 单调栈
+
+## 739. Daily Temperatures
+
+```java
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int len = temperatures.length;
+        int[] res = new int[len];
+        
+        Stack<Integer> stack = new Stack<>();
+        
+        for(int i = 0; i<len; i++){
+            
+            
+            while(!stack.isEmpty()&&temperatures[i]>temperatures[stack.peek()]){
+                
+                int index = stack.pop();
+                res[index] = i-index;
+                
+            }
+            
+            stack.push(i);
+            
+        }
+        
+        return res;
+        
+    }
+}
+```
+
+# 递归
+
+## 77. Combinations
+
+for循环遍历层数
+
+递归遍历深度
+
+```java
+class Solution {
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>(); 
+    
+    public List<List<Integer>> combine(int n, int k) {
+        
+        cal(n, k, 1);
+        return res;
+        
+    }
+    
+    public void cal(int n, int k, int startIndex){
+        
+        if(path.size()==k){
+            res.add(new ArrayList<>(path));
+            return ;
+        }
+        
+        for(int i=startIndex; i<=n-(k-path.size())+1; i++){
+            path.add(i);
+            cal(n, k, i+1);
+            path.remove(path.size()-1);
+        }
+    }
+}class Solution {
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>(); 
+    
+    public List<List<Integer>> combine(int n, int k) {
+        
+        cal(n, k, 1);
+        return res;
+        
+    }
+    
+    public void cal(int n, int k, int startIndex){
+        
+        if(path.size()==k){
+            res.add(new ArrayList<>(path));
+            return ;
+        }
+        
+        for(int i=startIndex; i<=n-(k-path.size())+1; i++){
+            path.add(i);
+            cal(n, k, i+1);
+            path.remove(path.size()-1);
+        }
     }
 }
 ```
