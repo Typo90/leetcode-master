@@ -3770,3 +3770,43 @@ class Solution {
 }
 ```
 
+# 17. Letter Combinations of a Phone Number
+
+```java
+class Solution {
+    
+    String[] letterMap = {"","","abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv","wxyz"};
+    List<String> res = new ArrayList<>();
+    StringBuilder sb = new StringBuilder();
+    
+    public List<String> letterCombinations(String digits) {
+        
+        if(digits==null||digits.length()==0){
+            return res;
+        }
+        
+        int len = digits.length();
+        cal(digits, len, 0);
+        return res;
+    }
+    
+    public void cal(String digits, int len, int startIndex){
+        
+        if(sb.length() == len){
+            res.add(sb.toString());
+            return;
+        }
+        
+        String s = letterMap[digits.charAt(startIndex)-'0'];
+        for(int i=0; i<s.length(); i++){
+            
+            sb.append(s.charAt(i));
+            cal(digits, len,startIndex+1);
+            sb.deleteCharAt(sb.length()-1);
+            
+        }
+        
+    }
+}
+```
+
