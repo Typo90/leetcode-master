@@ -3770,7 +3770,7 @@ class Solution {
 }
 ```
 
-# 17. Letter Combinations of a Phone Number
+## 17. Letter Combinations of a Phone Number
 
 ```java
 class Solution {
@@ -3806,6 +3806,154 @@ class Solution {
             
         }
         
+    }
+}
+```
+
+## 39 Combination Sum
+
+```java
+class Solution {
+    
+    //HashSet<Integer> res = new HashSet<Integer>;
+    List<List<Integer>> res = new ArrayList<>();
+    LinkedList<Integer> path = new LinkedList<>();
+    //int sum = 0;
+    
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        
+        Arrays.sort(candidates);
+        cal(candidates, target, 0, 0);
+        return res;
+    }
+    
+    public void cal(int[] candidates, int target, int sum, int startIndex){
+        
+        
+        if(sum>target){
+            return;
+        }
+        
+        if(sum==target){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+
+        for(int i =startIndex; i<candidates.length; i++){
+            
+            path.add(candidates[i]);
+            sum+=candidates[i];
+            cal(candidates, target, sum, i);
+            path.removeLast();
+            sum-=candidates[i];
+        }
+    }
+}
+```
+
+## 40 Combination Sum Ⅱ
+
+```java
+class Solution {
+    List<List<Integer>> res = new ArrayList<>();
+    LinkedList<Integer> path = new LinkedList<>();
+    
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        cal(candidates, target, 0, 0);   
+        return res;
+    }
+    
+    public void cal(int[] arr, int target, int startIndex, int sum){
+        
+        if(sum>target){
+            return;
+        }
+        
+        if(sum==target){
+            res.add(new ArrayList<>(path));
+        }
+        
+        for(int i = startIndex; i<arr.length; i++){
+            
+            if(i>startIndex&&arr[i]==arr[i-1]){
+                continue;
+            }
+            
+            path.add(arr[i]);
+            sum+=arr[i];
+            cal(arr,target, i+1, sum);
+            sum-=arr[i];
+            path.removeLast();
+            
+        }
+        
+    }
+}
+```
+
+
+
+# 切割问题
+
+## 131 Palindrome Partitioning
+
+切字符串，切完回溯
+
+```java
+class Solution {
+    
+    List<List<String>> res = new ArrayList<>();
+    LinkedList<String> path = new LinkedList<>();
+    
+    public List<List<String>> partition(String s) {
+        
+        
+        cal(s, 0);
+        return res;
+        
+    }
+    
+    private void cal(String s, int startIndex){
+        
+        if(startIndex >= s.length()){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        
+        for(int i = startIndex; i<s.length(); i++){
+            
+            if(isPal(startIndex,i,s)){
+                String str = s.substring(startIndex,i+1);
+                path.add(str);
+            }else{
+                continue;
+            }
+            
+            cal(s,i+1);
+            path.removeLast();
+            
+        }
+    }
+    
+    private boolean isPal(int start, int end, String s){
+        
+        int left = start;
+        int right = end;
+        
+        while(left<right){
+            
+            if(s.charAt(left)==s.charAt(right)){
+                left ++;
+                right --;
+            }else{
+                return false;
+            }
+            
+            
+        }
+        
+        return true;
     }
 }
 ```
