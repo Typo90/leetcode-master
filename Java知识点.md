@@ -28,9 +28,9 @@ String底层实现是char[]数组，被final关键词修饰
 
 # 不同数据结构的长度
 
-| Name   | function  |
-| ------ | --------- |
-| String | .length() |
-|        |           |
-|        |           |
+| Name                      | function  |
+| ------------------------- | --------- |
+| String                    | .length() |
+| int[], double[], String[] | .length   |
+|                           |           |
 

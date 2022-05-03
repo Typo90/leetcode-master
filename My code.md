@@ -975,6 +975,71 @@ public class Solution {
 }
 ```
 
+## [extra]21. Merge Two Sorted Lists
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+
+        if(list1==null&&list2==null){
+            return null;
+        }
+        
+        if(list1==null&&list2!=null){
+            return list2;
+        }
+        
+        if(list1!=null&&list2==null){
+            return list1;
+        }
+
+    
+        ListNode cur2 = list2;
+        ListNode dummyNode = new ListNode(-1,list1);
+        ListNode pre = dummyNode;
+        ListNode cur = list1;
+        
+        while(cur!=null && cur2!=null){
+            
+
+            if(cur2.val<=cur.val){
+                
+                ListNode node = new ListNode(cur2.val, cur);
+                pre.next = node;
+                //node.next = cur;
+                
+                cur2 = cur2.next;
+                pre = pre.next;
+            }else{
+                cur = cur.next;
+                pre = pre.next;
+            }
+            
+            
+        }
+        
+        if(cur2!=null){
+            pre.next = cur2;
+        }
+        
+        
+        return dummyNode.next;
+    }
+}
+```
+
+
+
 # 3.Hash Table
 
 ##  242. Valid Anagram
@@ -3489,6 +3554,132 @@ class Solution {
 ```
 
 ## *113
+
+## 617. Merge Two Binary Trees
+
+把右树+给左树
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+        Queue<TreeNode> que = new LinkedList<>();
+        
+        if(root1==null){
+            return root2;
+        }
+        
+        if(root2 == null){
+            return root1;
+        }
+        
+        que.add(root1);
+        que.add(root2);
+        
+        while(!que.isEmpty()){
+            
+            TreeNode node1 = que.poll();
+            TreeNode node2 = que.poll();
+            
+            node1.val += node2.val;
+            
+            if(node1.left!=null&&node2.left!=null){
+                que.add(node1.left);
+                que.add(node2.left);
+            }
+            
+            if(node1.right!=null&&node2.right!=null){
+                que.add(node1.right);
+                que.add(node2.right);
+            }
+            
+            if(node1.left == null && node2.left!=null){
+                node1.left = node2.left;
+            }
+            
+            if(node1.right == null && node2.right != null){
+                node1.right = node2.right;
+            }
+            
+            
+            
+            
+            
+        }
+        
+        return root1;
+    }
+}
+```
+
+## 700. Search in a Binary Search Tree
+
+普通法，前序遍历
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        Queue<TreeNode> que = new LinkedList<>();
+        
+        if(root == null){
+            return null;
+        }
+        que.add(root);
+        
+        while(!que.isEmpty()){
+            
+            TreeNode node = que.poll();
+            
+            if(node.val == val){
+                return node;
+            }
+            
+            if(node.left!=null){
+                que.add(node.left);
+            }
+            
+            if(node.right!=null){
+                que.add(node.right);
+            }
+            
+            
+        }
+        
+        return null;
+    }
+}
+```
+
+
 
 # 构建二叉树，后序转前序
 
