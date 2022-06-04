@@ -4,7 +4,7 @@ public class WeightedQuickUnionUF {
     private int[] sz;
 
     // Time: N
-    public QuickUniondUF(int N) {
+    public WeightedQuickUnionUF(int N) {
         id = new int[N];
         sz = new int[N];
         for (int i = 0; i < N; i++) {

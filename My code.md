@@ -4149,6 +4149,80 @@ class Solution {
 }
 ```
 
+## 698. Partition to K Equal Sum Subsets
+
+```
+class Solution {
+    
+    boolean[] used;
+    int totalsum = 0;
+    int res = 0;
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        used = new boolean[nums.length];
+        
+        //int totalsum = 0;
+        for(int i : nums){
+            totalsum += i;
+        }
+        System.out.println(totalsum);
+        
+        if(totalsum%k!=0){
+            return false;
+        }
+        
+        Arrays.sort(nums);
+        for(int i = 0, j = nums.length-1; i<j; i++,j--){
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            
+            //System.out.println(nums[i]);
+        }
+        
+       
+        
+        return dfs(nums, k, 0, 0, 0);
+
+    }
+    
+    private boolean dfs(int[] nums, int k, int count, int cursum, int startIndex){
+        
+        if(count==k-1){
+            return true;
+        }
+        
+        if(cursum > totalsum/k){
+            return false;
+        }
+        
+        if(cursum==totalsum/k){
+            return dfs(nums, k, count+1, 0, 0);
+
+        }
+        
+
+        
+        for(int i = startIndex; i<nums.length; i++){
+            if(used[i]!=true){
+                used[i] = true;
+                //cursum += nums[i];
+                if(dfs(nums, k, count, cursum+nums[i], i+1)==true){
+                    return true;
+                }
+                used[i] = false;
+                //cursum -= nums[i];
+            }
+        }
+        
+        return false;
+    }
+}
+```
+
+
+
+# 子集问题
+
 ## 78 subsets
 
 ```java
@@ -4183,7 +4257,7 @@ class Solution {
 }
 ```
 
-90
+## 90
 
 ```java
 class Solution {
@@ -4219,6 +4293,729 @@ class Solution {
             
         }
         
+        
+    }
+}
+```
+
+## 491. Increasing Subsequences
+
+```java
+class Solution {
+    
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    
+    public List<List<Integer>> findSubsequences(int[] nums) {
+
+        dfs(nums, 0);
+        return res;
+    }
+    
+    private void dfs(int[] nums, int startIndex){
+        
+        if(startIndex>nums.length){
+            return;
+        }
+        
+        if(path.size()>=2){
+            res.add(new ArrayList<>(path));
+        }
+        
+        //HashMap<Integer,Integer> map = new HashMap<>();
+        Set<Integer> set = new HashSet<>();
+        for(int i = startIndex; i<nums.length; i++){
+            
+            if(!path.isEmpty()&&nums[i]<path.get(path.size()-1)){
+                continue;
+            }
+            
+            
+            if(set.contains(nums[i])){
+                continue;
+            }
+           // if(map.getOrDefault(nums[i],0)>=1){
+            //    continue;
+           // }
+            set.add(nums[i]);
+            //map.put(nums[i],map.getOrDefault(nums[i],0)+1);
+            path.add(nums[i]);
+            dfs(nums,i+1);
+            path.remove(path.size()-1);
+            
+        }
+        
+        
+    }
+}
+```
+
+## 46. Permutations
+
+```java
+class Solution {
+    
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    boolean[] used;
+    
+    public List<List<Integer>> permute(int[] nums) {
+        used = new boolean[nums.length];
+        dfs(nums,0);
+        return res;
+    }
+    
+    private void dfs(int[] nums, int startIndex){
+        
+        if(path.size()==nums.length){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        
+        
+        for(int i =0; i<nums.length; i++){
+            
+            if(used[i]==true){
+                continue;
+            }
+            
+
+            used[i] = true;
+            path.add(nums[i]);          
+            dfs(nums, i);
+            path.remove(path.size()-1);
+            used[i] = false;
+        }
+    }
+}
+```
+
+## 47. Permutations II
+
+```java
+class Solution {
+    
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+    boolean[] used;
+    
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        used = new boolean[nums.length];
+        dfs(nums,0);
+        return res;
+    }
+    
+    private void dfs(int[] nums, int startIndex){
+        
+        if(path.size()==nums.length){
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        
+        
+        Set<Integer> set = new HashSet<>();
+        
+        for(int i =0; i<nums.length; i++){
+            
+            if(used[i]==true){
+                continue;
+            }
+                
+            if(set.contains(nums[i])){
+                continue;
+            }
+            
+            set.add(nums[i]);
+            used[i] = true;
+            path.add(nums[i]);          
+            dfs(nums, i);
+            path.remove(path.size()-1);
+            used[i] = false;
+        }
+    }
+}
+```
+
+# hard难度回溯
+
+## 51. N-Queens
+
+```java
+class Solution {
+    
+    List<List<String>> res = new ArrayList<>();
+    
+    char[][] chessBoard;
+    
+    public List<List<String>> solveNQueens(int n) {
+        chessBoard = new char[n][n];
+        for (char[] c : chessBoard) {
+            Arrays.fill(c, '.');
+        }
+        dfs(n,0);
+        return res;
+    }
+    
+    private void dfs(int n, int row){
+        
+        if(row == n){
+            
+            
+            res.add(charToArray(chessBoard));
+            return;
+        }
+        
+        for(int col = 0; col<n; col++){
+            
+            if(isValid(row, col, n)){
+                
+                chessBoard[row][col] = 'Q';
+                dfs(n, row+1);
+                chessBoard[row][col] = '.';
+                
+            }
+            
+        }
+        
+    }
+    
+    private boolean isValid(int row, int col, int n){
+        
+        for(int i = 0; i<row; i++){
+            if(chessBoard[i][col] == 'Q'){
+                return false;
+            }
+        }
+
+        
+        for(int i = row-1, j = col-1; i>=0 && j>=0; i--,j-- ){
+            if(chessBoard[i][j] == 'Q'){
+                return false;
+            }
+        }
+        
+        for(int i = row-1, j = col+1; i>=0 && j<=n-1; i--,j-- ){
+            if(chessBoard[i][j] == 'Q'){
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private List charToArray(char[][] arr){
+        
+        List<String> list = new ArrayList<>();
+
+        for (char[] c : arr) {
+            list.add(String.copyValueOf(c));
+        }
+        return list;
+        
+    }
+}
+```
+
+## 37. Sudoku Solver
+
+回溯三部曲
+
+终止条件，当找不到解时return false，全部解找完return true
+
+回溯棋盘，每次在棋盘上填数字
+
+```java
+class Solution {
+    public void solveSudoku(char[][] board) {
+        
+        
+        dfs(board);
+        //return board;
+    }
+    
+    private boolean dfs(char[][] board){
+        
+        
+        
+        
+        for(int row = 0; row<board.length; row++){
+            
+            for(int col = 0; col<board[0].length; col++){
+                
+                if(board[row][col]=='.'){
+                    
+
+                        
+                        
+                    for(char k = '1'; k<='9'; k++){
+
+                        if(isValid(row, col, k, board)){
+                            board[row][col] = k;
+                            if(dfs(board)){
+                                return true;
+                            }
+                            board[row][col] = '.';                    
+
+                        }
+
+                    }
+                        
+                    return false;
+                    
+                    
+                }      
+            }
+        }
+
+        return true;
+        
+    }
+    
+    private boolean isValid(int row, int col, char k, char[][] board){
+        
+        for(int i = 0; i<board[0].length; i++){
+            if(board[row][i]==k){
+                return false;
+            }
+        }
+        
+        for(int j = 0 ; j < board.length; j++){
+            if(board[j][col] == k){
+                return false;
+            }
+        }
+        
+        int startCol = (col/3)*3;
+        int startRow = (row/3)*3;
+        
+        for(int j = startRow; j<startRow+3; j++){
+            
+            for(int i = startCol; i<startCol+3; i++){
+                
+                if(board[j][i]==k){
+                    return false;
+                }
+                
+            }
+            
+        }
+        return true;
+    }
+}
+```
+
+# 贪心
+
+统计一正一负的情况
+
+```java
+class Solution {
+    public int wiggleMaxLength(int[] nums) {
+        
+        
+        
+        int curDif = 0;
+        int preDif = 0;
+        int res = 0;
+        
+        for(int i = 1; i<nums.length; i++){
+            
+            curDif = nums[i]-nums[i-1];
+            if((curDif>0 && preDif <=0) || (curDif<0 && preDif>=0)){
+                res++;
+                preDif = curDif;
+            }
+            
+        }
+        
+        res +=1;
+        return res;
+    }
+}
+```
+
+# 动态规划
+
+## 509. Fibonacci Number
+
+```java
+class Solution {
+    public int fib(int n) {
+        if(n==0){
+            return 0;
+        }
+
+        if(n==1){
+            return 1;
+        }
+        
+        //int[] dp = new int[n+1];
+        int[] dp = new int[2];
+        dp[0] = 0;
+        dp[1] = 1;
+        for(int i = 2; i<n+1; i++){
+            int sum = dp[0]+dp[1];
+            dp[0] = dp[1];
+            dp[1] = sum;
+        }
+        
+        return dp[1];
+        
+    }
+    
+    //private void 
+}
+```
+
+## 70. Climbing Stairs
+
+```java
+class Solution {
+    public int climbStairs(int n) {
+        
+        
+        if(n==1 || n==2){
+            return n;
+        }
+        
+
+        
+        int[] dp = new int[n];
+        
+        dp[0] = 1;
+        dp[1] = 2;
+        for(int i = 2; i<n; i++){
+            
+            dp[i] = dp[i-1] + dp[i-2];
+            
+        }
+        
+        
+        return dp[n-1];
+        
+    }
+}
+```
+
+## 746 Min Cost Climbing Stairs
+
+```java
+class Solution {
+    public int minCostClimbingStairs(int[] cost) {
+
+        int[] dp = new int [cost.length];
+        
+        
+        if(cost.length == 1){
+            return cost[0];
+        }
+        
+        if(cost.length == 2){
+            return Math.min(cost[0],cost[1]);
+        }
+        
+
+        dp[0] = cost[0];
+        dp[1] = cost[1];
+        
+        for(int i = 2; i<cost.length; i++){
+            
+            dp[i] = Math.min(dp[i-1],dp[i-2])+cost[i];
+            
+        }
+         
+        return Math.min(dp[dp.length-1],dp[dp.length-2]);
+    }
+} 
+```
+
+# 二维dp数组
+
+## 62. Unique Paths
+
+```
+class Solution {
+    public int uniquePaths(int m, int n) {
+        int[][] dp = new int [m][n];        
+        
+        for(int i = 0; i<m; i++){
+            dp[i][0] = 1;
+        }
+        
+        for(int i = 0; i<n; i++){
+            dp[0][i] = 1;
+        }
+        
+        for(int i = 1; i<m; i++){
+            for(int j = 1; j<n; j++){
+                dp[i][j] = dp[i-1][j]+dp[i][j-1];
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+}
+```
+
+## 63. Unique Paths II
+
+```
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        
+        int row = obstacleGrid.length;
+        int col = obstacleGrid[0].length;
+        int[][] dp = new int[obstacleGrid.length][obstacleGrid[0].length];
+        
+        
+        for(int i =0; i<col; i++){
+            
+            if(obstacleGrid[0][i]==1){
+                break;
+            }else{
+                dp[0][i] = 1;
+            } 
+        }
+        
+        
+        for(int i =0; i<row; i++){
+            
+            if(obstacleGrid[i][0]==1){
+                break;
+            }else{
+                dp[i][0] = 1;
+            } 
+        }
+        
+        for(int i = 1; i < row; i++){
+            
+            for(int j = 1; j<col; j++){
+                
+                if(obstacleGrid[i][j]==1){
+                    continue;
+                }else{
+                    dp[i][j] = dp[i-1][j] + dp[i][j-1];
+                }
+                
+            }
+            
+        }
+        
+        return dp[row-1][col-1];
+    } 
+}
+```
+
+##  343. Integer Break
+
+![image-20220531052753829](image-20220531052753829.png)
+
+```java
+class Solution {
+    public int integerBreak(int n) {
+        int[] dp = new int [n+1];
+        if(n==2){
+            return 1;
+        }
+        
+        if(n==3){
+            return 2;
+        }
+        
+        dp[2] = 1;
+        dp[3] = 2;
+        
+        for(int i = 3; i<=n; i++){
+            for(int j = 1; j<i-1; j++){
+                
+                int first = j*(i-j);
+                int second = j*dp[i-j];
+                int temp = Math.max(first, second);
+                
+                dp[i] = Math.max(dp[i], temp);
+                
+                
+            }   
+            System.out.println(dp[i]);
+        }
+        
+        return dp[n];
+    }
+}
+```
+
+## 96. Unique Binary Search Trees
+
+这题思路很巧妙
+
+ 以dp[3]举例
+
+以1为根节点，左子树为dp[0]，右子树为dp[2]
+
+以2为根节点，左子树为dp[1]，右子树为dp[1]
+
+以3为根节点，左子树为dp[2]， 右子树为dp[0]
+
+
+
+```java
+class Solution {
+    public int numTrees(int n) {
+        int[] dp = new int[n+1];
+        dp[0] = 1;
+        dp[1] = 1;
+        
+        //dp[2] = 2;
+        
+        //dp[3] = dp[0]*dp[2]+dp[1]*dp[1]+dp[2]*dp[0]
+        
+        for(int i = 2; i<=n; i++){
+            for(int j = 1; j<=i; j++ ){
+                dp[i] += dp[j-1] * dp[i-j];
+            }
+        }
+        
+        return dp[n];
+    }
+}
+```
+
+# 背包问题
+
+## 416. Partition Equal Subset Sum
+
+二维dp
+
+![image-20220603130559596](image-20220603130559596.png)
+
+```java
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int totalsum = 0;
+        for(int i : nums){
+            totalsum += i;
+        }
+        
+        if(totalsum%2!=0){
+            return false;
+        }
+        
+        int[][] dp = new int[nums.length][totalsum/2+1];
+        
+        for(int i = 0; i<dp[0].length; i++){
+            dp[0][i] = 0;
+            if(i>nums[0]){
+                dp[0][i] = nums[0];
+            }
+        }
+        
+        for(int j = 1; j<dp.length; j++){
+            for(int i = 0; i<dp[0].length; i++){
+                
+                if(i<nums[j]){
+                    dp[j][i] = dp[j-1][i];
+                }else{
+                    dp[j][i] = Math.max(dp[j-1][i],dp[j-1][i-nums[j]]+nums[j]);
+                }
+                
+                
+            }
+        }
+        
+        /*for(int i = 0;  i<dp.length; i++){
+            for(int j = 0; j<dp[0].length; j++){
+                System.out.print(dp[i][j]);
+                System.out.print('.');
+            }
+            System.out.println('-');
+        }*/
+        
+        
+        if(dp[dp.length-1][dp[0].length-1]==totalsum/2){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+```
+
+一维dp
+
+```JAVA
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for(int i : nums){
+            sum += i;
+        }
+        if(sum%2!=0){
+            return false;
+        }
+        int[] dp = new int[sum/2+1];
+        
+        //dp[0] = 0;
+        
+        for(int i = 0; i<nums.length; i++){
+            for(int j = dp.length-1; j>=0; j--){
+                if(j<nums[i]){
+                    dp[j] = dp[j];
+                }else{
+                    dp[j] = Math.max(dp[j],dp[j-nums[i]]+nums[i]);
+                }
+            }
+        }
+        
+        /*for(int i : dp){
+            System.out.print(i);
+            System.out.print('.');
+        }*/
+        
+        if(dp[dp.length-1]==sum/2){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+```
+
+## 1049. Last Stone Weight II
+
+标准01背包
+
+![image-20220604063539999](image-20220604063539999.png)
+
+```java
+class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        int sum = 0;
+        for(int i : stones){
+            sum += i;
+        }
+        
+        int target = sum/2;
+        
+        int[] dp = new int[target+1];
+        
+        for(int i = 0; i<stones.length; i++){
+            
+            for(int j = target; j>=0; j--){
+                
+                if(j>=stones[i]){
+                    dp[j] = Math.max(dp[j], dp[j-stones[i]]+stones[i]);
+                }
+                
+            }
+            
+        }
+        
+        for(int i : dp){
+            System.out.print(i);
+            System.out.print('.');
+        }
+        
+        return sum-2*dp[dp.length-1];
         
     }
 }
