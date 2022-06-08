@@ -11,6 +11,9 @@ public class Percolation {
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
+        if (n <= 0) {
+
+        }
         grid = new int[n][n];
         // ( 0,..., n-1)
         // ( n,...,2n-1)

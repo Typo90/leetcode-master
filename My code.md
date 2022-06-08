@@ -5021,3 +5021,205 @@ class Solution {
 }
 ```
 
+## 494. Target Sum
+
+​    // 假设正数之和为x，负数之和为y
+​    // x + y = sum;
+​    // y = sum - x;
+​    // x-(sum-x) = target
+​    // x= (target+sum)/2
+
+于是转换成了一个背包容量为(target+sum)/2的背包问题
+
+背包中装的是方法
+
+```java
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for(int i : nums){
+            sum += i;
+        }
+        
+        // 假设正数之和为x，负数之和为y
+        // x + y = sum;
+        // y = sum - x;
+        // x-(sum-x) = target
+        // x= (target+sum)/2
+        
+        if((target +sum)%2!=0){
+            return 0;
+        }
+        
+        int len = Math.abs(( target + sum ) / 2);
+        
+        
+        
+        int[] dp = new int[len+1];
+        dp[0] = 1;
+        for(int i = 0; i<nums.length; i++){
+            for(int j = len; j>=nums[i]; j--){
+                dp[j] = dp[j] + dp[j-nums[i]];
+            }
+        }   
+        
+        return dp[len];
+    }
+}
+```
+
+## 518. Coin Change 2
+
+```Java
+class Solution {
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount+1]; 
+        dp[0] = 1;
+        
+        for(int i = 0; i<coins.length; i++){
+            for(int j = coins[i]; j<dp.length; j++){
+                
+                dp[j] = dp[j] + dp[j-coins[i]];
+                
+            }
+            
+            // for(int w = 0; w<dp.length; w++){
+            //     System.out.print(dp[w]);
+            //     System.out.print('.');
+            // }
+            // System.out.println("-");
+        }
+        
+        
+        return dp[dp.length-1];
+    }
+}
+```
+
+## 474. Ones and Zeroes
+
+```java
+class Solution {
+    public int findMaxForm(String[] strs, int m, int n) {
+        
+        
+        int[][] dp = new int [n+1][m+1];
+        
+        for(String s : strs){
+            
+            int zero = 0;
+            int one = 0;
+            
+            for(int k = 0; k<s.length(); k++){
+                if(s.charAt(k)=='0'){
+                    zero++;
+                }else{
+                    one++;
+                }
+            }
+            
+            for(int i = n; i>=one; i--){
+                for(int j = m; j>=zero; j--){
+                    
+                    dp[i][j] = Math.max(dp[i][j], dp[i-one][j-zero]+1);
+                    
+                }
+            }
+            
+        }
+        
+        for(int i = 0; i<dp.length; i++){
+            for(int j = 0; j<dp[0].length; j++){
+                System.out.print(dp[i][j]);
+                System.out.print('.');
+            }
+            System.out.println('-');
+        }
+        
+        return dp[n][m];
+        
+    }
+}
+```
+
+## 377. Combination Sum IV
+
+这题是排列问题
+
+对于排列问题，外层遍历背包，内层遍历数据
+
+对于组合问题，外层遍历数组，内层遍历背包
+
+![image-20220608105340400](image-20220608105340400.png)
+
+```java
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target+1];
+        
+        dp[0] = 1;
+        
+        for(int i = 0; i<dp.length; i++){
+            
+            for(int j = 0; j<nums.length; j++){
+                
+                if(i>=nums[j]){
+                   dp[i] = dp[i] + dp[i-nums[j]]; 
+                }
+
+                
+            }
+            
+            // for(int k: dp){
+            //     System.out.print(k); 
+            //     System.out.print('.'); 
+            // }
+            // System.out.println('-'); 
+            
+        }
+        
+
+            
+        
+        return dp[dp.length-1];
+    }
+    
+    
+
+}
+```
+
+## 70. Climbing Stairs
+
+![image-20220608110135030](image-20220608110135030.png)
+
+第二次爬楼梯，排列问题
+
+```java
+class Solution {
+    public int climbStairs(int n) {
+        int[] dp = new int[n+1];
+        
+        int[] nums = {1,2};
+
+        dp[0] = 1;
+        for(int i = 0; i<dp.length; i++){
+            for(int j = 0; j<nums.length; j++){
+                if(i>=nums[j]){
+                   dp[i] = dp[i] + dp[i-nums[j]]; 
+                }
+            }
+        }
+        
+            // for(int k: dp){
+            //     System.out.print(k); 
+            //     System.out.print('.'); 
+            // }
+            // System.out.println('-'); 
+        
+        return dp[dp.length-1];
+        
+    }
+}
+```
+
