@@ -1,3 +1,136 @@
+# -----------东哥版本-----------
+
+# 1.二叉树
+
+## 104. Maximum Depth of Binary Tree
+
+二叉树题目的递归解法可以分两类思路，第一类是**遍历一遍二叉树**得出答案，第二类是通过**分解问题**计算出答案
+
+1.递归解决，每次找深度值
+
+```java
+class Solution {
+    
+    int res = 0;
+    
+    public int maxDepth(TreeNode root) {
+        traverse(root, 0);
+        return res;
+        
+    }
+    
+    private void traverse(TreeNode root, int depth){
+        if(root==null){
+            if(depth>res){
+                res = depth;
+            }
+            return;
+        }
+        
+        traverse(root.left, depth+1);
+        traverse(root.right, depth+1);
+    }
+}
+```
+
+2.分解解决
+
+```java
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        
+        int leftMax = maxDepth(root.left);
+        int rightMax = maxDepth(root.right);
+        
+        int res = Math.max(leftMax, rightMax)+1;
+        
+        return res;
+    }
+}
+```
+
+# 后序遍历
+
+## 543. Diameter of Binary Tree
+
+后续遍历实现左右最大子树之和
+
+```java
+class Solution {
+    
+    int max = 0;
+    public int diameterOfBinaryTree(TreeNode root) {
+        traverse(root);
+        return max;
+    }
+    
+    private int traverse(TreeNode root){
+        
+        if(root == null){
+            return 0;
+        }
+        
+        int leftMax = traverse(root.left);
+        int rightMax = traverse(root.right);
+        
+        
+        
+        int res = Math.max(leftMax, rightMax)+1;
+        if(leftMax+rightMax>=max){
+            max = leftMax+rightMax;
+        }
+        
+        return res;
+        
+        
+        
+    }
+}
+```
+
+## 366. Find Leaves of Binary Tree
+
+找到相同层的节点实际上就是找**深度一样**的叶子节点
+
+通过后续遍历，反向增加深度
+
+```java
+class Solution {
+    
+    List<List<Integer>> collect = new ArrayList<>();
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        traverse(root);
+        return collect;
+    }
+    
+    private int traverse(TreeNode root){
+        
+        if(root == null){
+            return 0;
+        }
+        
+        int left = traverse(root.left);
+        int right = traverse(root.right);
+        int res = Math.max(left, right)+1;
+        
+        if(res > collect.size()){
+            collect.add(new ArrayList<>());
+        }
+        
+        collect.get(res-1).add(root.val);
+        
+        return res;
+    }
+}
+```
+
+
+
+# -----------代码随想录---------
+
 # 1.Arrays
 
 ## 704. Binary Search
@@ -4808,7 +4941,7 @@ class Solution {
 
 ##  343. Integer Break
 
-![image-20220531052753829](image-20220531052753829.png)
+![image-20220531052753829](/pics/image-20220531052753829.png)
 
 ```java
 class Solution {
@@ -4886,7 +5019,7 @@ class Solution {
 
 二维dp
 
-![image-20220603130559596](image-20220603130559596.png)
+![image-20220603130559596](pics/image-20220603130559596-16550846186121.png)
 
 ```java
 class Solution {
@@ -4984,7 +5117,7 @@ class Solution {
 
 标准01背包
 
-![image-20220604063539999](image-20220604063539999.png)
+![image-20220604063539999](pics/image-20220604063539999-16550846220493.png)
 
 ```java
 class Solution {
@@ -5150,7 +5283,7 @@ class Solution {
 
 对于组合问题，外层遍历数组，内层遍历背包
 
-![image-20220608105340400](image-20220608105340400.png)
+![image-20220608105340400](pics/image-20220608105340400-16550846272045.png)
 
 ```java
 class Solution {
@@ -5191,7 +5324,7 @@ class Solution {
 
 ## 70. Climbing Stairs
 
-![image-20220608110135030](image-20220608110135030.png)
+![image-20220608110135030](pics/image-20220608110135030-16550846292197.png)
 
 第二次爬楼梯，排列问题
 
@@ -5218,6 +5351,211 @@ class Solution {
             // System.out.println('-'); 
         
         return dp[dp.length-1];
+        
+    }
+}
+```
+
+## 322. Coin Change
+
+![image-20220610000516437](pics/image-20220610000516437-16550846314739.png)
+
+```java
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp =new int[amount+1];
+
+        
+        for(int i = 0; i<dp.length; i++){
+            dp[i] = Integer.MAX_VALUE-1;
+        }
+        
+        dp[0] = 0;
+        
+        for(int i = 0; i<coins.length; i++){
+            for(int j = 0; j<dp.length; j++){
+                
+                if(j>=coins[i]){
+                    dp[j] = Math.min(dp[j], dp[j-coins[i]]+1);
+                }
+                
+            }
+            
+            // for(int k:dp){
+            //     System.out.print(k);   
+            //     System.out.print('.');  
+            // }
+            // System.out.println('-');
+            
+        }
+        
+        if(dp[dp.length-1]==Integer.MAX_VALUE-1){
+            return -1;
+        }else{
+            return dp[dp.length-1]; 
+        }
+        
+        //return dp[dp.length-1];
+    }
+}
+```
+
+## 279. Perfect Squares
+
+![image-20220610063944510](pics/image-20220610063944510-165508463351711.png)
+
+```java
+class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n+1];
+        
+        for(int i = 0; i<dp.length; i++){
+            dp[i] = Integer.MAX_VALUE-1;
+        }
+        
+        dp[0] = 0;
+        
+
+        
+        for(int i = 1; i*i<=n; i++){
+            for(int j = i*i; j<dp.length; j++){
+                
+                
+                dp[j] = Math.min(dp[j], dp[j-i*i]+1);
+
+              
+            }
+            
+
+        }
+            
+
+        
+        return dp[dp.length-1];
+
+    }
+}
+```
+
+# 打家劫舍
+
+## 198. House Robber
+
+![image-20220613065333981](pics/image-20220613065333981-165508463560713.png)
+
+```java
+class Solution {
+    public int rob(int[] nums) {
+        int[] dp = new int[nums.length];
+        
+        if(nums.length==1){
+            return nums[0];
+        }
+        
+        dp[0] = nums[0];
+        dp[1] = Math.max(nums[0],nums[1]);
+        
+        
+        for(int j = 2; j<nums.length; j++){
+            
+            dp[j] = Math.max(dp[j-1], dp[j-2]+nums[j]);
+            
+        }
+        
+        return dp[dp.length-1];
+    }
+}
+```
+
+## *337
+
+# 股票问题
+
+## 121. Best Time to Buy and Sell Stock
+
+2. 确定递推公式
+
+如果第i天持有股票即dp[i] [0]， 那么可以由两个状态推出来
+
+* 第i-1天就持有股票，那么就保持现状，所得现金就是昨天持有股票的所得现金 即：dp[i - 1] [0]
+* 第i天买入股票，所得现金就是买入今天的股票后所得现金即：-prices[i]
+
+那么dp[i][0]应该选所得现金最大的，所以dp[i] [0] = max(dp[i - 1] [0], -prices[i]);
+
+如果第i天不持有股票即dp[i] [1]， 也可以由两个状态推出来
+
+* 第i-1天就不持有股票，那么就保持现状，所得现金就是昨天不持有股票的所得现金 即：dp[i - 1] [1]
+* 第i天卖出股票，所得现金就是按照今天股票佳价格卖出后所得现金即：prices[i] + dp[i - 1] [0]
+
+同样dp[i][1]取最大的，dp[i][1] = max(dp[i - 1] [1], prices[i] + dp[i - 1] [0]);
+
+![image-20220614220141351](pics/image-20220614220141351.png)
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int[][] dp =new int[prices.length][2];
+        
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        
+        
+        for(int i = 1; i<prices.length; i++){
+            
+            dp[i][0] = Math.max(-prices[i], dp[i-1][0]);
+            dp[i][1] = Math.max(prices[i]+dp[i-1][0], dp[i-1][1]);
+            
+        }
+        
+        return dp[prices.length-1][1];
+        
+    }
+}
+```
+
+## 122. Best Time to Buy and Sell Stock II
+
+这里重申一下dp数组的含义：
+
+* dp[i][0] 表示第i天持有股票所得现金。
+* dp[i][1] 表示第i天不持有股票所得最多现金
+
+
+如果第i天持有股票即dp[i][0]， 那么可以由两个状态推出来 
+
+* 第i-1天就持有股票，那么就保持现状，所得现金就是昨天持有股票的所得现金 即：dp[i - 1] [0]
+* 第i天买入股票，所得现金就是昨天不持有股票的所得现金减去 今天的股票价格 即：dp[i - 1] [1] - prices[i] 
+
+**注意这里和[121. 买卖股票的最佳时机](https://programmercarl.com/0121.买卖股票的最佳时机.html)唯一不同的地方，就是推导dp[i][0]的时候，第i天买入股票的情况**。
+
+在[121. 买卖股票的最佳时机](https://programmercarl.com/0121.买卖股票的最佳时机.html)中，因为股票全程只能买卖一次，所以如果买入股票，那么第i天持有股票即dp[i] [0]一定就是 -prices[i]。
+
+而本题，因为一只股票可以买卖多次，所以当第i天买入股票的时候，所持有的现金可能有之前买卖过的利润。
+
+那么第i天持有股票即dp[i][0]，如果是第i天买入股票，所得现金就是昨天不持有股票的所得现金 减去 今天的股票价格 即：dp[i - 1] [1] - prices[i]。
+
+在来看看如果第i天不持有股票即dp[i] [1]的情况， 依然可以由两个状态推出来
+
+* 第i-1天就不持有股票，那么就保持现状，所得现金就是昨天不持有股票的所得现金 即：dp[i - 1] [1]
+* 第i天卖出股票，所得现金就是按照今天股票佳价格卖出后所得现金即：prices[i] + dp[i - 1] [0] 
+
+![image-20220614223826358](pics/image-20220614223826358.png)
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int[][] dp = new int[prices.length][2];
+        
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        
+        
+        for(int i = 1;  i<prices.length; i++){
+            dp[i][0] = Math.max(dp[i-1][0], dp[i-1][1]-prices[i]);
+            dp[i][1] = Math.max(dp[i-1][1], dp[i-1][0]+prices[i]);
+        }
+        
+        return dp[dp.length-1][1];
         
     }
 }
