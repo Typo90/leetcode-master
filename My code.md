@@ -127,6 +127,182 @@ class Solution {
 }
 ```
 
+## 116. Populating Next Right Pointers in Each Node
+
+遍历法
+
+```java
+
+class Solution {
+    public Node connect(Node root) {
+        if(root==null){
+            return null;
+        }
+        root.next=null;
+        traverse(root.left, root.right);
+        return root;
+    }
+    
+    private void traverse(Node node1, Node node2){
+        
+        if(node1==null||node2==null){
+            return;
+        }
+        
+        node1.next = node2;
+        traverse(node1.left, node1.right);
+        traverse(node2.left, node2.right);
+        traverse(node1.right, node2.left);
+        
+    }
+}
+```
+
+
+
+## 114. Flatten Binary Tree to Linked List
+
+分解法
+
+```java
+class Solution {
+    public void flatten(TreeNode root) {
+        if(root == null){
+            return;
+        }
+        
+        flatten(root.left);
+        flatten(root.right);
+        
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        root.left = null;
+        root.right = left;
+        
+        TreeNode p = root;
+        while(p.right!=null){
+            p = p.right;
+        }
+        p.right = right;
+        
+    }
+    
+
+}
+```
+
+# 构造二叉树
+
+## 654. Maximum Binary Tree
+
+```java
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        
+        
+        
+        if(nums.length==0){
+            return null;
+        } 
+        
+        int max = -1;
+        int idx = -1;
+        
+        for(int i = 0; i<nums.length; i++){
+            if(nums[i]>=max){
+                max = nums[i];
+                idx = i;
+            }
+        }
+        
+        TreeNode root = new TreeNode(max);
+        
+        int[] left = Arrays.copyOfRange(nums, 0, idx);
+        int[] right = Arrays.copyOfRange(nums, idx+1, nums.length);
+        
+        root.left = constructMaximumBinaryTree(left);
+        root.right = constructMaximumBinaryTree(right);
+        
+        return root;
+    }
+}
+```
+
+## 105. Construct Binary Tree from Preorder and Inorder Traversal
+
+leftSize是inorder中的left长度
+
+preorder中 idx+leftSize=下一个头的位子
+
+```java
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return build(preorder, 0, preorder.length, inorder, 0, inorder.length);
+    }
+    
+    private TreeNode build(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd){
+        
+        if(inStart>=inEnd){
+            return null;
+        }
+        
+        int max = preorder[preStart];
+        
+        int idx = -1;
+        for(int i = inStart; i<inEnd; i++){          
+            if(inorder[i]==max){
+                idx = i;
+            }          
+        }
+        
+        TreeNode root = new TreeNode(max);
+        
+        int leftSize = idx-inStart;
+        
+        root.left = build(preorder, preStart+1, preEnd, inorder, inStart, idx);
+        root.right = build(preorder, preStart+1+leftSize, preEnd, inorder, idx+1, inEnd);
+        
+        return root;
+    }
+}
+```
+
+## 106. Construct Binary Tree from Inorder and Postorder Traversal
+
+```java
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return build(inorder, 0, inorder.length, postorder, 0, postorder.length);
+    }
+    
+    private TreeNode build(int[] inorder, int inStart, int inEnd, int[] postorder, int postStart, int postEnd){
+        
+        
+        if(inStart>=inEnd){
+            return null;
+        }
+        
+        int max = postorder[postEnd-1];
+        int idx = -1;
+        for(int i=0; i<inorder.length; i++){
+            if(inorder[i]==max){
+                idx = i;
+            }
+        }
+        
+        TreeNode root = new TreeNode(max);
+        
+        int rightSize = inEnd-idx;
+        
+        root.left = build(inorder, inStart, idx, postorder, postStart, postEnd-rightSize);
+        root.right = build(inorder, idx+1, inEnd, postorder, postStart, postEnd-1);
+        
+        return root;
+        
+    }
+}
+```
+
 
 
 # -----------代码随想录---------
