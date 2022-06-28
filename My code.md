@@ -303,6 +303,165 @@ class Solution {
 }
 ```
 
+# 序列化与反序列化二叉树
+
+## 297. Serialize and Deserialize Binary Tree
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    // Encodes a tree to a single string.
+    
+
+    
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        traverse1(root, sb);
+        return sb.toString();
+    }
+    
+    private void traverse1(TreeNode root, StringBuilder sb){
+        if(root == null){
+            sb.append("null,");
+            return;
+        }
+        
+        sb.append(root.val);
+        sb.append(",");
+        traverse1(root.left, sb);
+        traverse1(root.right, sb);        
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        
+        String[] s = data.split(",");
+        
+        return traverse2(s);
+
+    }
+    int idx = 0;
+    private TreeNode traverse2(String[] s){
+        
+        if(idx >= s.length){
+            return null;
+        }
+        
+        if(s[idx].equals("null")){
+            return null;
+        }
+        
+        int temp = Integer.parseInt(s[idx]);
+        TreeNode root = new TreeNode(temp);
+        idx++;
+        root.left = traverse2(s);
+        idx++;
+        root.right = traverse2(s);
+        
+        return root;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// TreeNode ans = deser.deserialize(ser.serialize(root));
+```
+
+## 652. Find Duplicate Subtrees
+
+同样是序列化思想，通过map储存所有的子树的字符串，如果子树数量>=1那么代表重复了
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
+    HashMap<String, Integer> record = new HashMap<>();
+    List<TreeNode> res = new ArrayList<>();
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        traverse(root);
+        return res;
+    }
+    
+    String traverse(TreeNode root){
+        
+        if(root==null){
+            
+            return "null";
+        }
+        
+        String left = traverse(root.left);
+        String right = traverse(root.right);
+        
+        String subTree = left + "," + right + "," + root.val;
+        
+        int temp = record.getOrDefault(subTree, 0);
+        
+        if(temp == 1){
+            res.add(root);
+        }
+        
+        record.put(subTree, temp+1);
+        
+        return subTree;
+    }
+}
+```
+
+# BST之二叉搜索树
+
+## 538. Convert BST to Greater Tree
+
+中序遍历bst实质是升序打印数值
+
+反过来就是降序打印数值
+
+```java
+class Solution {
+    int sum = 0;
+    public TreeNode convertBST(TreeNode root) {
+        traverse(root);
+        return root;
+    }
+    
+    private void traverse(TreeNode root){
+        
+        if(root==null){
+            return;
+        }
+        
+        traverse(root.right);
+        sum += root.val;
+        root.val = sum;
+        traverse(root.left);
+        
+    }
+}
+```
+
 
 
 # -----------代码随想录---------
