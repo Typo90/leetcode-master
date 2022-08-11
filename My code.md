@@ -1,5 +1,538 @@
 # -----------东哥版本-----------
 
+# 双指针链表
+
+## 21. Merge Two Sorted Lists
+
+```java
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dummyNode = new ListNode(-1);
+        ListNode dummy = dummyNode;
+        ListNode p1 = list1;
+        ListNode p2 = list2;
+        
+        while(p1!=null&&p2!=null){
+            
+            if(p1.val>=p2.val){
+                dummy.next = p2;
+                p2 = p2.next;
+            }else if(p1.val<p2.val){
+                dummy.next = p1;
+                p1 = p1.next;
+            }
+            
+            dummy = dummy.next;
+        }
+        
+        if(p1!=null){
+            dummy.next = p1;
+        }else{
+            dummy.next = p2;
+        }
+        
+        return dummyNode.next;
+    }
+}
+```
+
+## 86. Partition List
+
+注意断开原链表的next指针
+
+```java
+            ListNode temp = cur.next;
+            cur.next = null;
+            cur = temp;
+```
+
+
+
+```java
+class Solution {
+    public ListNode partition(ListNode head, int x) {
+        ListNode dummyNode1 = new ListNode(-1);
+        ListNode p1 = dummyNode1;
+        ListNode dummyNode2 = new ListNode(-1);
+        ListNode p2 = dummyNode2;
+        
+        ListNode cur = head;
+        while(cur!=null){
+            
+            if(cur.val<x){
+                p1.next = cur;
+                //cur = cur.next;
+                p1 = p1.next;
+            }else{
+                p2.next = cur;
+                //cur = cur.next;
+                p2 = p2.next;
+            }      
+            
+            ListNode temp = cur.next;
+            cur.next = null;
+            cur = temp;
+            
+        }
+        
+        p1.next = dummyNode2.next;
+        
+        return dummyNode1.next;
+    }
+}
+```
+
+## 23. Merge k Sorted Lists
+
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        
+        if(lists.length==0){
+            return null;
+        }
+        
+        ListNode dummyNode = new ListNode(-1);
+        ListNode p = dummyNode;
+        //System.out.println(lists.length);
+        PriorityQueue<Integer> pq = new PriorityQueue<>(lists.length, (a,b)->(a-b));
+        
+        for(ListNode cur : lists){
+            while(cur!=null){
+                pq.add(cur.val);
+                cur = cur.next;
+            }
+        }
+        
+        
+        while(!pq.isEmpty()){
+            
+            ListNode temp = new ListNode(pq.poll());
+            p.next = temp;
+            p = p.next;
+            
+        }
+        
+        return dummyNode.next;
+    }
+}
+```
+
+## 19. Remove Nth Node From End of List
+
+```java
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummyNode = new ListNode(-1);
+        dummyNode.next = head;
+        ListNode p1 = dummyNode;
+        ListNode p2 = dummyNode;
+        
+        while(n>0){
+            p2 = p2.next;
+            n--;
+        }
+        
+        ListNode pre = null;
+        while(p2!=null){
+            pre = p1;
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        
+        pre.next = p1.next;
+        p1.next = null;
+        
+        return dummyNode.next;
+    }
+}
+```
+
+## 876. Middle of the Linked List
+
+```java
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        
+        while(fast!=null && fast.next!=null){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        
+        return slow;
+    }
+}
+```
+
+## 160. Intersection of Two Linked Lists
+
+cur1走完a就开始走b
+
+cur2走完b开始走a
+
+如果相连一定能相遇
+
+```java
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode cur1 = headA;
+        ListNode cur2 = headB;
+        
+        while(cur1!=cur2){
+            if(cur1!=null){
+                cur1 = cur1.next;
+            }else{
+                cur1 = headB;
+            }
+            
+            if(cur2!=null){
+                cur2 = cur2.next;
+            }else{
+                cur2 = headA;
+            }
+        }
+        
+        return cur1;
+        
+    }
+}
+```
+
+# 递归链表
+
+## 206.Reverse Linked List
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        
+        if(head==null || head.next==null){
+            return head;
+        }
+        
+        ListNode last = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+        
+        return last;
+        
+    }
+}
+```
+
+## 92. Reverse Linked List II
+
+```java
+class Solution {
+    ListNode successor = null;
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        
+        if(left==1){
+            return reverseN(head, right);
+        }
+        
+        head.next = reverseBetween(head.next, left-1, right-1);
+        
+        return head;
+    }
+    
+    ListNode reverseN(ListNode head, int n){
+        
+        if(n==1){
+            successor = head.next;
+            return head;
+        }
+        
+        ListNode last = reverseN(head.next, n-1);
+        head.next.next = head;
+        head.next = successor;
+        
+        return last;
+    }
+}
+```
+
+## 双指针数组
+
+## 26. Remove Duplicates from Sorted Array
+
+```java
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        
+
+        
+        int slow = 0;
+        int fast = 0;
+        
+        while(fast<nums.length){
+            
+            if(nums[slow]!=nums[fast]){
+                slow++;
+                nums[slow] = nums[fast];
+            }else{
+                fast++;
+            }
+            
+        }
+        
+        return slow+1;
+    }
+}
+```
+
+## 27. Remove Element
+
+```java
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        if(nums.length==0){
+            return 0;
+        }
+        
+        int slow = 0;
+        int fast = 0;
+        
+        while(fast<nums.length){
+            if(nums[fast]==val){
+                fast ++;
+            }else{
+                nums[slow] = nums[fast];
+                slow++;
+                fast++;
+            }
+        }
+        
+        return slow;
+    }
+}
+```
+
+## 283. Move Zeroes
+
+```java
+class Solution {
+    public void moveZeroes(int[] nums) {
+        int slow = 0;
+        int fast = 0;
+        
+        while(fast<nums.length){
+            
+            if(nums[fast]==0){
+                fast++;
+            }else{
+                nums[slow] = nums[fast];
+                slow++;
+                fast++;
+            }
+        }
+        
+        for(int i = slow; i<nums.length; i++){
+            nums[i] = 0;
+        }
+    }
+}
+```
+
+## 167. Two Sum II - Input Array Is Sorted
+
+```java
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int left = 0;
+        int right = numbers.length-1;
+        int[] res = new int[2];
+        while(left<=right){
+            
+            int sum = numbers[left] + numbers[right];
+            if(sum>target){
+                right--;
+            }else if(sum<target){
+                left++;
+            }else{
+                res[0] = left+1;
+                res[1] = right+1;
+                break;
+            }
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+## 344. Reverse String
+
+```java
+class Solution {
+    public void reverseString(char[] s) {
+        int left = 0;
+        int right = s.length-1;
+        
+        while(left<=right){
+            
+            char temp = s[left];
+            s[left] = s[right];
+            s[right] = temp;
+            
+            left++;
+            right--;
+            
+        }
+        
+    }
+}
+```
+
+## 5. Longest Palindromic Substring
+
+从中心向两边扩散， 中心有奇数和偶数两种可能
+
+```java
+class Solution {
+    public String longestPalindrome(String s) {
+        
+        String res = "";
+        
+        for(int i = 0; i<s.length(); i++){
+            
+            String s1 = palindrome(s, i, i);
+            String s2 = palindrome(s, i, i+1);
+            
+            res = s1.length()>res.length() ? s1 : res;
+            res = s2.length()>res.length() ? s2 : res;
+            
+        }
+        
+        return res;
+        
+    }
+    
+    private String palindrome(String s, int left, int right){
+        
+        while(left>=0 && right<s.length()){
+            
+            if(s.charAt(left)==s.charAt(right)){
+                left--;
+                right++;
+            }else{
+                break;
+            }
+            
+        }
+        
+        return s.substring(left+1, right);
+        
+        
+    }
+}
+```
+
+# 二分搜索
+
+## 875. Koko Eating Bananas
+
+```java
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+
+        
+        int left = 1;
+        int right = 1000000000+1;
+        
+        while(left < right){
+            
+            int mid = left + (right-left)/2;
+            if(f(piles, mid)>h){
+                left = mid+1;
+            }else if(f(piles, mid)<h){
+                right = mid;
+            }else{
+                right = mid;
+            }
+            
+        }
+        
+        return left;
+        
+    }
+    
+    public int f(int[] piles, int k){
+        
+        int hours = 0;
+        for(int i = 0; i<piles.length; i++){
+            hours += piles[i] / k;
+            if(piles[i]%k>0){
+                hours++;
+            }
+        }
+        
+        return hours;
+        
+    }
+}
+```
+
+## 1011. Capacity To Ship Packages Within D Days
+
+```java
+class Solution {
+    public int shipWithinDays(int[] weights, int days) {
+        
+        int left = 0;
+        int right = 1;
+        for(int w : weights){
+            left = Math.max(left, w);
+            right += w;
+        }
+        
+        while(left < right){
+            int mid = left + (right - left)/2;
+            if(f(weights, mid)>days){
+                left = mid + 1;
+            }else if(f(weights, mid)<days){
+                right = mid;
+            }else if(f(weights, mid)==days){
+                right = mid;
+            }
+        }
+        
+        return left;
+        
+    }
+    
+    int f(int[] weights, int x) {
+        int days = 0;
+        for (int i = 0; i < weights.length; ) {
+            // 尽可能多装货物
+            int cap = x;
+            while (i < weights.length) {
+                if (cap < weights[i]) break;
+                else cap -= weights[i];
+                i++;
+            }
+            days++;
+        }
+        return days;
+    }
+}
+```
+
+
+
 # 1.二叉树
 
 ## 104. Maximum Depth of Binary Tree
@@ -458,6 +991,1127 @@ class Solution {
         root.val = sum;
         traverse(root.left);
         
+    }
+}
+```
+
+## 增删查改模板
+
+```java
+void BST(TreeNode root, int target) {
+    if (root.val == target)
+        // 找到目标，做点什么
+    if (root.val < target) 
+        BST(root.right, target);
+    if (root.val > target)
+        BST(root.left, target);
+}
+```
+
+## 700. Search in a Binary Search Tree
+
+```java
+
+class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        
+        if(root==null){
+            return null;
+        }
+        
+        if(root.val>val){
+            return searchBST(root.left, val);
+        }
+        
+        if(root.val<val){
+            return searchBST(root.right, val);
+        }
+        
+        if(root.val==val){
+            return root;
+        }
+        
+        return root;
+    }
+}
+```
+
+## 701. Insert into a Binary Search Tree
+
+```java
+class Solution {
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if(root==null){
+            return new TreeNode(val);
+        }
+        
+        if(root.val>val){
+            root.left = insertIntoBST(root.left, val);
+        }
+        
+        if(root.val<val){
+            root.right = insertIntoBST(root.right, val);
+        }
+        
+        return root;
+    }
+}
+```
+
+## 450. Delete Node in a BST
+
+```java
+
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        return traverse(root, key);
+    }
+    
+    private TreeNode traverse(TreeNode root, int key){
+        
+        if(root==null){
+            return null;
+        }
+        
+        if(root.val>key){
+            root.left = traverse(root.left, key);
+        }
+        
+        if(root.val<key){
+            root.right = traverse(root.right, key);
+        }
+        
+        if(root.val==key){
+            
+            if(root.left==null && root.right==null){
+                return null;
+            }
+            
+            if(root.left==null){
+                return root.right;
+            }
+            
+            if(root.right == null){
+                return root.left;
+            }
+            
+            if(root.left!=null&&root.right!=null){
+                TreeNode min = getMin(root.right);
+                root.val = min.val;
+                root.right = traverse(root.right, min.val);
+            }
+            
+        }
+        
+
+        
+        return root;
+        
+    }
+    
+    TreeNode getMin(TreeNode root){
+        
+        while(root.left!=null){
+            root = root.left;
+        }
+        
+        return root;
+        
+    }
+}
+```
+
+# 多叉树的遍历
+
+## 341. Flatten Nested List Iterator
+
+把nestedList中的integer和list看成多叉树的节点
+
+```java
+/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this NestedInteger holds a single integer
+ *     public List<NestedInteger> getList();
+ * }
+ */
+public class NestedIterator implements Iterator<Integer> {
+
+    List<Integer> res = new LinkedList<>();
+    
+    
+    public NestedIterator(List<NestedInteger> nestedList) {
+        
+        for(NestedInteger i: nestedList){
+            traverse(i);
+        }    
+    }
+
+    @Override
+    public Integer next() {
+        Integer r = res.get(0);
+        res.remove(0);
+        return r;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return !res.isEmpty();
+    }
+    
+    private void traverse(NestedInteger i){
+        
+        if(i.isInteger()){
+            res.add(i.getInteger());
+            return;
+        }
+        
+        for(NestedInteger j: i.getList()){
+            traverse(j);
+        }  
+        
+    }
+}
+
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i = new NestedIterator(nestedList);
+ * while (i.hasNext()) v[f()] = i.next();
+ */
+```
+
+## LCA（最近公共祖先）
+
+找一个值=》找两个值=》
+
+## 236. Lowest Common Ancestor of a Binary Tree 
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return findVal(root, p.val, q.val);
+    }
+    
+    private TreeNode findVal(TreeNode root, int val1, int val2){
+        if(root==null){
+            return null;
+        }
+        
+        if(root.val == val1 || root.val == val2){
+            return root;
+        }
+
+        TreeNode left = findVal(root.left, val1, val2);
+        TreeNode right = findVal(root.right, val1, val2);
+        
+        if(left!=null && right!=null){
+            return root;
+        }
+        
+        return left!=null ? left:right;
+    }
+}
+```
+
+## 1644. Lowest Common Ancestor of a Binary Tree II
+
+这题必须是后续遍历。前序遍历时找到值就直接return了，因为值必定存在
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    boolean findp = false;
+    boolean findq = false;
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        
+        TreeNode res = findVal(root, p.val, q.val);
+        if(findp==true && findq==true){
+            return res;
+        }else{
+            return null;
+        }
+    }
+    
+    private TreeNode findVal(TreeNode root, int val1, int val2){
+        
+        if(root==null){
+            return null;
+        }
+        
+
+        
+        TreeNode left = findVal(root.left, val1, val2);
+        TreeNode right = findVal(root.right, val1, val2);
+        
+        if(root.val == val1 || root.val == val2){
+            if(root.val==val1){
+                findp = true;
+            }
+            if(root.val==val2){
+                findq = true;
+            }
+            return root;
+        }
+        
+        if(left!=null && right!=null){
+            return root;
+        }
+        
+        return left!=null ? left:right;
+        
+    }
+}
+```
+
+## 235. Lowest Common Ancestor of a Binary Search Tree
+
+当前root值>val1并且<val2即为LCA
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        
+        int val1 = Math.min(p.val, q.val);
+        int val2 = Math.max(p.val, q.val);
+        
+        return findVal(root, val1, val2);
+    }
+    
+    private TreeNode findVal(TreeNode root, int val1, int val2){
+        
+        if(root==null){
+            return null;
+        }
+        
+        if(root.val>val2){
+            return findVal(root.left, val1, val2);
+        }
+        
+        if(root.val<val1){
+            return findVal(root.right, val1, val2);
+        }
+        
+        return root;
+        
+    }
+}
+```
+
+## 1650. Lowest Common Ancestor of a Binary Tree III
+
+本质上是双链表是否相交问题
+
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node parent;
+};
+*/
+
+class Solution {
+    public Node lowestCommonAncestor(Node p, Node q) {
+        Node cur1 = p;
+        Node cur2 = q;
+        
+        while(cur1!=cur2){
+            
+            if(cur1!=null){
+                cur1 = cur1.parent;
+            }else{
+                cur1 = q;
+            }
+            
+            if(cur2!=null){
+                cur2 = cur2.parent;
+            }else{
+                cur2 = p;
+            }
+        }
+
+        return cur1;
+    }
+}
+```
+
+## 完全二叉树
+
+计算二叉树节点个数
+
+```java
+class Solution {
+    public int countNodes(TreeNode root) {
+		
+        if(root==null){
+            return 0;
+        }
+        
+        return 1+countNodes(root.left) + countNodes(root.right);    
+        
+    }
+}
+```
+
+计算perfect binary tree节点个数
+
+```java
+class Solution {
+    public int countNodes(TreeNode root) {
+	int deep = 0;
+	while(root!=null){
+		root = root.left;
+        deep++;
+	}
+        
+    return (int)Math.pow(2, deep)-1;
+}
+```
+
+
+
+```java
+class Solution {
+    public int countNodes(TreeNode root) {
+        TreeNode l = root;
+        int deepL = 0;
+        TreeNode r = root;
+        int deepR= 0;
+        
+        while(l!=null){
+            l = l.left;
+            deepL ++;
+        }
+        
+        while(r!=null){
+            r = r.right;
+            deepR ++;
+        }
+        
+        if(deepL == deepR){
+            return (int)Math.pow(2, deepL)-1;
+        }
+        
+        return 1+countNodes(root.left) + countNodes(root.right);    
+        
+    }
+}
+```
+
+
+
+# 图论
+
+## 797. All Paths From Source to Target
+
+```java
+class Solution {
+    
+    List<List<Integer>> res = new ArrayList<>();
+    LinkedList<Integer> path = new LinkedList<>();
+    
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        traverse(graph, 0);
+        return res;
+    }
+    
+    void traverse(int[][] graph, int s){
+        
+        
+        
+        if(s==graph.length-1){
+            path.add(s);
+            res.add(new LinkedList<>(path));
+            path.removeLast();
+            return;
+        }
+        path.add(s);
+        
+        for(int v:graph[s]){
+            traverse(graph, v);
+        }
+        
+        path.removeLast();
+        
+    }
+}
+```
+
+
+
+## 207. Course Schedule
+
+```java
+class Solution {
+    
+    boolean[] visited;
+    boolean[] onPath;
+    boolean hasCycle = false;
+    
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        
+        List<Integer>[] graph = buildGraph(numCourses, prerequisites);
+        
+        visited = new boolean[numCourses];
+        onPath = new boolean[numCourses];
+        
+        for(int i = 0; i<numCourses; i++){
+            traverse(graph, i);
+        }
+        
+        return !hasCycle;
+    }
+    
+    private void traverse(List<Integer>[] graph, int s){
+        
+        if(onPath[s]){
+            hasCycle = true;
+        }
+        
+        if(visited[s] || hasCycle){
+            return;
+        }
+        
+        visited[s] = true;
+        onPath[s] = true;
+        for(int v : graph[s]){
+            traverse(graph, v);
+        }
+        
+        onPath[s] = false;
+        
+        
+    }
+    
+    private List<Integer>[] buildGraph(int numCourses, int[][] prerequisites){
+        List<Integer>[] graph = new LinkedList[numCourses];
+        
+        for(int i = 0; i<numCourses; i++){
+            graph[i] = new LinkedList<>();
+        }
+        
+        for(int[] edges : prerequisites){
+            
+            int from = edges[0];
+            int to = edges[1];
+            
+            graph[from].add(to);
+            
+        }
+        return graph;
+    }
+}
+```
+
+# 二分图
+
+## 886. Possible Bipartition
+
+无向图实际上是一种双向图
+
+```java
+class Solution {
+    boolean[] visited;
+    boolean[] color;
+    boolean isBi = true;
+    
+    public boolean possibleBipartition(int n, int[][] dislikes) {
+        List<Integer>[] graph = buildGraph(n, dislikes);
+        visited = new boolean[n+1];
+        color = new boolean[n+1];
+        
+        for(int i = 1; i<n+1; i++){
+            traverse(graph, i);
+        }
+        
+        return isBi;
+    }
+    
+    private void traverse(List<Integer>[] graph, int s){
+        
+        if(isBi == false){
+            return;
+        }
+        
+        for(int e : graph[s]){
+            
+            if(!visited[e]){
+                visited[e] = !visited[s];
+                traverse(graph, e);
+            }else{
+                if(visited[e]==visited[s]){
+                    isBi = false;
+                    return;
+                }
+            }
+            
+        }
+        
+    }
+    
+    private List<Integer>[] buildGraph(int n, int[][] dislikes){
+        List<Integer>[] graph = new LinkedList[n+1];
+        for(int i = 0; i<n+1; i++){
+            graph[i] = new LinkedList<>();
+        }
+        
+        for(int[] edge : dislikes){
+            int from = edge[1];
+            int to = edge[0];
+            
+            graph[from].add(to);
+            graph[to].add(from);
+        }
+        
+        return graph;
+    }
+}
+```
+
+# KRUSKAL 最小生成树算法
+
+## 1135. Connecting Cities With Minimum Cost
+
+```java
+class Solution {
+    public int minimumCost(int n, int[][] connections) {
+        UF uf = new UF(n+1);
+        Arrays.sort(connections, (a,b)->(a[2]-b[2]));
+        int sum = 0;
+        for(int[] v : connections){
+            int f = v[0];
+            int s = v[1];
+            int weight = v[2];
+            
+            if(uf.connected(f,s)){
+                continue;
+            }else{
+                uf.union(f,s);
+                sum+=weight;
+            }
+        }
+        
+        if(uf.count()==2){
+            return sum;
+        }else{
+            return -1;
+        }
+    }
+    
+    class UF{
+        
+        private int count;
+        private int[] parent;
+        private int[] size;
+        
+        public UF(int n){
+            count = n;
+            parent = new int[n];
+            size = new int[n];
+            
+            for(int i = 0; i<n; i++){
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+        
+        public int find(int x){
+            
+            while(x!=parent[x]){
+                parent[x] = parent[parent[x]];
+                x = parent[x];
+            }
+            return x;
+        }
+        
+        public void union(int p, int q){
+            
+            int rootp = find(p);
+            int rootq = find(q);
+            
+            if(rootp == rootq){
+                return;
+            }
+            
+            if(size[rootp]>size[rootq]){
+                parent[rootq] = rootp;
+                rootp += size[rootq];
+            }else{
+                parent[rootp] = rootq;
+                rootq += size[rootp];
+            }
+            
+            count--;
+            
+        }
+        
+        public boolean connected(int p, int q){
+            int rootp = find(p);
+            int rootq = find(q);
+            return rootp==rootq;
+        }
+        
+        public int count(){
+            return this.count;
+        }
+        
+    }
+}
+```
+
+# LRU cache算法
+
+```java
+class LRUCache {
+
+    class Node{
+        
+        public int key;
+        public int val;
+        public Node next;
+        public Node prev;
+        
+        public Node(int k, int v){
+            this.key = k;
+            this.val = v;
+        }
+    }
+    
+    class DoubleList{
+        
+        public Node head;
+        public Node tail;
+        public int size;
+        
+        public DoubleList(){
+            head = new Node(0, 0);
+            tail = new Node(0, 0);
+            head.next =tail;
+            tail.prev = head;
+        }
+        
+        public void addLast(Node x){
+            x.prev = tail.prev;
+            x.next = tail; 
+            tail.prev.next = x;
+            tail.prev = x;
+            size++;
+        }
+        
+        public void remove(Node x){
+            x.prev.next = x.next;
+            x.next.prev = x.prev;
+            size--;
+        }
+        
+        public Node removeFirst(){
+            if(head.next==tail){
+                return null;
+            }
+            Node first = head.next;
+            remove(first);
+            return first;
+        }
+        
+        public int size(){
+            return this.size();
+        }
+            
+    }
+    
+    Map<Integer, Node> map;
+    DoubleList cache;
+    int cap;
+    
+    private void makeRecentlyUse(int key){
+        Node x = map.get(key);
+        cache.remove(x);
+        cache.addLast(x);
+    }
+    
+    private void addRecentlyUse(int key, int val){
+        Node x = new Node(key, val);
+        cache.addLast(x);
+        map.put(key, x);
+        
+    }
+    
+    private void deleteKey(int key){
+        Node x = map.get(key);
+        map.remove(key);
+        cache.remove(x);
+    }
+    
+    private void removeLeaseRecentlyUse(){
+        Node x = cache.removeFirst();
+        map.remove(x.key);
+    }
+    
+    public LRUCache(int capacity) {
+        map = new HashMap<>();
+        cache = new DoubleList();
+        this.cap = capacity;
+    }
+    
+    public int get(int key) {
+        if(!map.containsKey(key)){
+            return -1;
+        }else{
+            makeRecentlyUse(key);
+            return map.get(key).val;
+        }
+    }
+    
+    public void put(int key, int value) {
+        if(!map.containsKey(key)){
+            if(cap == cache.size()){
+                removeLeaseRecentlyUse();
+            }
+            addRecentlyUse(key, value);
+        }else{
+            deleteKey(key);
+            addRecentlyUse(key, value);
+            return;
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+```
+
+LinkedHashMap实现
+
+```java
+class LRUCache {
+
+    private int cap;
+    private LinkedHashMap<Integer, Integer> cache;
+    
+    public LRUCache(int capacity) {
+        cap = capacity;
+        cache = new LinkedHashMap<>();
+    }
+    
+    public int get(int key) {
+        if(!cache.containsKey(key)){
+            return -1;
+        }else{    
+            int val = cache.get(key);
+            cache.remove(key);
+            cache.put(key, val);   
+            return cache.get(key);
+        }
+    }
+    
+    public void put(int key, int value) {
+        if(cache.containsKey(key)){
+            cache.remove(key);
+            cache.put(key, value);
+            return;
+        }else{
+            if(cache.size()>=cap){
+
+                //使用迭代器， head就是最老的
+                int oldestKey = cache.keySet().iterator().next();
+                cache.remove(oldestKey);
+            }
+            cache.put(key,value);
+            return;
+        }
+        
+
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+```
+
+# 单调栈
+
+## 496. Next Greater Element I
+
+```java
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int[] res = new int[nums1.length];
+        
+        for(int i = 0; i<nums1.length; i++){
+            map.put(nums1[i], i);
+        }
+        
+        
+        Stack<Integer> stack = new Stack<>();
+        for(int i = nums2.length-1; i>=0; i--){
+            
+            while(!stack.isEmpty()&&stack.peek()<=nums2[i]){
+                stack.pop();
+            }
+            
+            if(map.containsKey(nums2[i])){
+                int idx = map.get(nums2[i]);
+                res[idx] = stack.isEmpty() ? -1 : stack.peek();
+            }
+            
+            stack.push(nums2[i]);
+            
+        }
+        
+        return res;
+        
+    }
+}
+```
+
+## 739. Daily Temperatures
+
+```java
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        Stack<Integer> stack = new Stack<>();
+        int len = temperatures.length;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        
+        int[] res = new int[len];
+        
+        for(int i = len-1; i>=0; i--){
+            
+            map.put(temperatures[i], i);
+            
+            while(!stack.isEmpty()&&stack.peek()<=temperatures[i]){
+                stack.pop();
+            }
+            
+            res[i] = stack.isEmpty()? 0 : map.get(stack.peek())-i;
+            stack.push(temperatures[i]);
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+## 503. Next Greater Element II
+
+环形数组采取两倍数组长
+
+```java
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        
+        int[] res = new int[nums.length];
+        
+        int n = nums.length;
+        for(int i = 2*n-1; i>=0; i--){
+            
+            while(!stack.isEmpty()&&stack.peek()<=nums[i%n]){
+                stack.pop();
+            }
+            
+            res[i%n] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(nums[i%n]);
+            
+        }
+        
+        return res;
+    }
+}
+```
+
+## 岛屿问题
+
+## 200. Number of Islands
+
+```java
+class Solution {
+    
+    boolean[][] visited;
+    
+    public int numIslands(char[][] grid) {
+        visited = new boolean[grid.length][grid[0].length];
+        int res = 0;
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                
+                if(grid[i][j]=='1'){
+                    res ++;
+                    dfs(i, j, grid);
+                }
+                
+            }
+        }
+        return res;
+    }
+    
+    
+    public void dfs(int row, int col, char[][] grid){
+        
+        if(col>=grid[0].length || row >= grid.length || col<0 || row<0){
+            return;
+        }
+        
+        if(visited[row][col]==true){
+            return;
+        }
+        
+        if(grid[row][col]=='0'){
+            return;
+        }
+        
+        grid[row][col] = '0';
+        
+        dfs(row, col+1, grid);
+        dfs(row+1, col, grid);
+        dfs(row, col-1, grid);
+        dfs(row-1, col, grid);
+        
+    }
+}
+```
+
+## 695. Max Area of Island
+
+```java
+class Solution {
+    
+    int count = 0;
+    int res = 0;
+    
+    public int maxAreaOfIsland(int[][] grid) {
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                
+                if(grid[i][j]==1){
+                    count = 0;
+                    dfs(grid, i, j);
+                    res = Math.max(res, count);
+                }
+                
+            }
+        }
+        
+        return res;
+    }
+    
+    public void dfs(int[][] grid, int row, int col){
+        
+        if(row>=grid.length || row <0 || col>=grid[0].length || col <0){
+            return;
+        }
+        
+        if(grid[row][col]==0){
+            return;
+        }
+        
+        grid[row][col] = 0;
+        count++;
+        
+        dfs(grid, row+1, col);
+        dfs(grid, row, col+1);
+        dfs(grid, row-1, col);
+        dfs(grid, row, col-1);
+    }
+}
+```
+
+
+
+## 1254. Number of Closed Islands
+
+```java
+class Solution {
+    public int closedIsland(int[][] grid) {
+        
+        int res = 0;
+        
+        for(int i = 0; i<grid[0].length; i++){
+            dfs(grid, 0, i);
+            dfs(grid, grid.length-1, i);
+        }
+        
+        for(int i = 0; i<grid.length; i++){
+            dfs(grid, i, 0);
+            dfs(grid, i, grid[0].length-1);
+        }
+        
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                
+                if(grid[i][j]==0){
+                    res++;
+                    dfs(grid, i, j);
+                }
+                
+            }
+        }
+        return res;
+    }
+    
+    public void dfs(int[][] grid, int row, int col){
+        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
+            return;
+        }
+        
+        if(grid[row][col]==1){
+            return;
+        }
+        
+        grid[row][col] = 1;
+        dfs(grid, row+1, col);
+        dfs(grid, row, col+1);
+        dfs(grid, row-1, col);
+        dfs(grid, row, col-1);
     }
 }
 ```
