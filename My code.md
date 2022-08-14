@@ -1969,7 +1969,7 @@ class Solution {
 }
 ```
 
-## 岛屿问题
+# 岛屿问题
 
 ## 200. Number of Islands
 
@@ -2112,6 +2112,103 @@ class Solution {
         dfs(grid, row, col+1);
         dfs(grid, row-1, col);
         dfs(grid, row, col-1);
+    }
+}
+```
+
+## 1905. Count Sub Islands
+
+```java
+class Solution {
+    public int countSubIslands(int[][] grid1, int[][] grid2) {
+        
+        int res = 0;
+        
+        for(int i = 0; i<grid1.length; i++){
+            for(int j = 0; j<grid1[0].length; j++){   
+                if(grid2[i][j]==1 && grid1[i][j]==0){
+                    dfs(grid2, i, j);
+                }
+            }
+        }
+        
+        for(int i = 0; i<grid1.length; i++){
+            for(int j = 0; j<grid1[0].length; j++){   
+                if(grid2[i][j]==1 && grid1[i][j]==1){
+                    res++;
+                    dfs(grid2, i, j);
+                }
+            }
+        }
+        
+        return res;
+        
+    }
+    
+    public void dfs(int[][] grid, int row, int col){
+        
+        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
+            return;
+        }
+        
+        if(grid[row][col] == 0){
+            return;
+        }
+        
+        grid[row][col] = 0;
+        dfs(grid, row+1, col);
+        dfs(grid, row-1, col);
+        dfs(grid, row, col+1);
+        dfs(grid, row, col-1);
+        
+    }
+}
+```
+
+## 694. Number of Distinct Islands
+
+通过方向1, 2, 3, 4判断是否为同一个岛屿，并转换为方向string
+
+```java
+class Solution {
+    public int numDistinctIslands(int[][] grid) {
+        HashSet<String> set = new HashSet<>();
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                
+                if(grid[i][j]==1){
+                    StringBuilder sb = new StringBuilder();
+                    dfs(grid, i, j, 20, sb);
+                    set.add(sb.toString());
+                }
+                
+            }
+        }
+        
+        return set.size();
+    }
+    
+    public void dfs(int[][] grid, int row, int col, int dir, StringBuilder sb){
+        
+        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
+            return;
+        }
+        
+        if(grid[row][col]==0){
+            return;
+        }
+        
+        grid[row][col] = 0;
+        
+        sb.append(dir);
+        sb.append(",");
+        dfs(grid, row+1, col, 1, sb);
+        dfs(grid, row-1, col, 2, sb);
+        dfs(grid, row, col+1, 3, sb);
+        dfs(grid, row, col-1, 4, sb);
+        sb.append(-dir);
+        sb.append(",");
+        
     }
 }
 ```
