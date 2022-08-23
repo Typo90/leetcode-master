@@ -2213,6 +2213,153 @@ class Solution {
 }
 ```
 
+# 动态规划
+
+1.确定状态
+
+## 最长递增子序列
+
+## 300. Longest Increasing Subsequence
+
+DP做法
+
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, 1);
+        
+        int max = 1;
+        for(int i = 0; i<nums.length; i++){
+            for(int j = 0; j<i; j++){
+                if(nums[j]<nums[i]){
+                    dp[i] = Math.max(dp[i], dp[j]+1);
+                    if(dp[i]>max){
+                        max = dp[i];
+                    }
+                }
+            }
+        }
+        
+        return max;
+    }
+}
+```
+
+扑克排序法
+
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int[] top = new int[nums.length];
+
+        int piles = 0;
+
+        for(int i = 0; i<nums.length; i++){
+            int poker = nums[i];
+            int left = 0;
+            int right = piles;
+
+            while(left<right){
+                int mid = left + (right-left)/2;
+                if(top[mid]>poker){
+                    right = mid;
+                }else if(top[mid]<poker){
+                    left = mid+1;
+                }else{
+                    right = mid;
+                }
+            }
+            
+            if(left == piles){
+                piles++;
+            }
+            top[left] = poker;
+            
+        }
+        
+        return piles;
+    }
+}
+```
+
+## 354. Russian Doll Envelopes
+
+将信封的width增序排序，hegith降序排序
+
+```java
+class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+        int[] dp = new int[envelopes.length];
+        Arrays.fill(dp, 1);
+        Arrays.sort(envelopes, new Comparator<int[]>()
+        {
+            public int compare(int[] a, int[] b){
+                return a[0] == b[0] ? b[1] - a[1] : a[0] - b[0];
+            }                
+        });
+        
+        
+        int[] top = new int[envelopes.length];
+        int piles = 0;
+        for(int i = 0; i<envelopes.length; i++){
+            int left = 0;
+            int right = piles;
+            int poker = envelopes[i][1];
+            
+            while(left<right){
+                int mid = left + (right-left)/2;
+                if(top[mid]<poker){
+                    left = mid+1;
+                }else if(top[mid]>poker){
+                    right = mid;
+                }else{
+                    right = mid;
+                }
+            }
+            
+            if(left == piles){
+                piles++;
+            }
+            top[left] = poker;
+        }
+        
+   
+        
+        return piles;
+    }
+}
+```
+
+# 最小路径和
+
+## 64. Minimum Path Sum
+
+```java
+class Solution {
+    public int minPathSum(int[][] grid) {
+        int[][] dp = new int[grid.length][grid[0].length];
+        dp[0][0] = grid[0][0];
+        
+        for(int i = 1; i<dp.length; i++){
+            dp[i][0] = grid[i][0] + dp[i-1][0];
+        }
+        
+        for(int j = 1; j<dp[0].length; j++){
+            dp[0][j] = grid[0][j] + dp[0][j-1];
+        }
+        
+        for(int i = 1; i<dp.length; i++){
+            for(int j = 1; j<dp[0].length; j++){
+                dp[i][j] = Math.min(dp[i-1][j],dp[i][j-1])+grid[i][j];
+                System.out.println(dp[i][j]);
+            }
+        }
+        return dp[dp.length-1][dp[0].length-1];
+    }
+}
+```
+
 
 
 # -----------代码随想录---------
