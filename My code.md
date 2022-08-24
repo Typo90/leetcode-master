@@ -533,7 +533,51 @@ class Solution {
 
 
 
-# 1.二叉树
+# 二叉树
+
+## 144. Binary Tree Preorder Traversal
+
+1.递归解决
+
+```java
+class Solution {
+    List<Integer> res = new ArrayList<>();
+    public List<Integer> preorderTraversal(TreeNode root) {
+        traverse(root);
+        return res;
+        
+    }
+    
+    public void traverse(TreeNode root){
+        if(root==null){
+            return;
+        }
+        res.add(root.val);
+        traverse(root.left);
+        traverse(root.right);
+    }
+}
+```
+
+2.分解解决
+
+```java
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        if(root==null){
+            return res;
+        }
+        res.add(root.val);
+        res.addAll(preorderTraversal(root.left));
+        res.addAll(preorderTraversal(root.right));
+        return res;
+        
+    }
+}
+```
+
+
 
 ## 104. Maximum Depth of Binary Tree
 
@@ -585,7 +629,9 @@ class Solution {
 }
 ```
 
-# 后序遍历
+
+
+## 后序遍历
 
 ## 543. Diameter of Binary Tree
 
@@ -593,36 +639,88 @@ class Solution {
 
 ```java
 class Solution {
-    
-    int max = 0;
+    int res = 0;
     public int diameterOfBinaryTree(TreeNode root) {
         traverse(root);
-        return max;
+        return res;
     }
     
-    private int traverse(TreeNode root){
-        
+    public int traverse(TreeNode root){
         if(root == null){
             return 0;
         }
         
-        int leftMax = traverse(root.left);
-        int rightMax = traverse(root.right);
+        int left = traverse(root.left);
+        int right = traverse(root.right);
+        res = Math.max(res, left+right);
         
-        
-        
-        int res = Math.max(leftMax, rightMax)+1;
-        if(leftMax+rightMax>=max){
-            max = leftMax+rightMax;
-        }
-        
-        return res;
-        
-        
-        
+        return Math.max(left, right)+1;
     }
 }
 ```
+
+## 层序遍历
+
+## 515. Find Largest Value in Each Tree Row
+
+```java
+class Solution {
+    public List<Integer> largestValues(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        Queue<TreeNode> que = new LinkedList<>();
+        if(root==null){
+            return res;
+        }else{
+            que.offer(root);
+        }
+        
+        while(!que.isEmpty()){
+            
+            int size = que.size();
+            int max = Integer.MIN_VALUE;
+            for(int i = 0; i<size; i++){
+                TreeNode node = que.poll();
+                max = Math.max(max, node.val);
+                if(node.left!=null){
+                    que.offer(node.left);
+                }
+                if(node.right!=null){
+                    que.offer(node.right);
+                }
+            }
+            res.add(max);
+            
+        }
+        return res;
+    }
+}
+```
+
+## 226. Invert Binary Tree
+
+```
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        traverse(root);
+        return root;
+    }
+    
+    public void traverse(TreeNode root){
+        if(root==null){
+            return;
+        }
+        
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        
+        traverse(root.left);
+        traverse(root.right);
+    }
+}
+```
+
+
 
 ## 366. Find Leaves of Binary Tree
 
@@ -2216,6 +2314,59 @@ class Solution {
 # 动态规划
 
 1.确定状态
+
+## 509. Fibonacci Number
+
+1.递归+记忆
+
+```java
+class Solution {
+    public int fib(int n) {
+        int[] memo = new int[n+1];
+        return traverse(n, memo);
+    }
+    
+    public int traverse(int n, int[] memo){
+        if(n==0 || n==1){
+            return n;
+        }
+        if(memo[n]!=0){
+            return memo[n];
+        }
+        memo[n] = traverse(n-1, memo) + traverse(n-2, memo);
+        return memo[n];
+    }
+}
+
+```
+
+dp
+
+```java
+class Solution {
+    public int fib(int n) {
+        if(n==0){
+            return 0;
+        }
+        // int[] dp = new int[n+1];
+        // dp[0] = 0;
+        // dp[1] = 1;
+        int[] dp = new int[2];
+        dp[0] = 0;
+        dp[1] = 1;
+        
+        for(int i = 2; i<=n; i++){
+            int dpi = dp[0]+dp[1];
+            dp[0] = dp[1];
+            dp[1] = dpi;
+        }
+        
+        return dp[1];
+    }
+}
+```
+
+
 
 ## 最长递增子序列
 
