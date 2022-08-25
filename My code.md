@@ -264,7 +264,7 @@ class Solution {
 }
 ```
 
-## 双指针数组
+# 双指针数组
 
 ## 26. Remove Duplicates from Sorted Array
 
@@ -696,6 +696,8 @@ class Solution {
 }
 ```
 
+# 二叉树思路篇
+
 ## 226. Invert Binary Tree
 
 ```
@@ -789,7 +791,7 @@ class Solution {
 }
 ```
 
-
+bfs法
 
 ## 114. Flatten Binary Tree to Linked List
 
@@ -858,6 +860,30 @@ class Solution {
     }
 }
 ```
+
+## 998. Maximum Binary Tree II
+
+```java
+class Solution {
+    public TreeNode insertIntoMaxTree(TreeNode root, int val) {
+        if(root == null){
+            return new TreeNode(val);
+        }
+        
+        if(root.val < val){
+            TreeNode temp = root;
+            root = new TreeNode(val);
+            root.left = temp;
+        }else{
+            root.right = insertIntoMaxTree(root.right, val);
+        }
+        
+        return root;
+    }
+}
+```
+
+
 
 ## 105. Construct Binary Tree from Preorder and Inorder Traversal
 
@@ -2507,6 +2533,63 @@ class Solution {
             }
         }
         return dp[dp.length-1][dp[0].length-1];
+    }
+}
+```
+
+## 931. Minimum Falling Path Sum
+
+```java
+class Solution {
+    public int minFallingPathSum(int[][] matrix) {
+        
+        if(matrix.length==1){
+            return matrix[0][0];
+        }
+        
+        int[][] dp = new int[matrix.length][matrix[0].length];
+        
+        //Arrays.fill(dp, Integer.MAX_VALUE);
+        
+        for(int j = 0; j<matrix[0].length; j++){
+            dp[0][j] = matrix[0][j];
+        }
+    
+        int res = Integer.MAX_VALUE;
+        
+        for(int i = 1; i<matrix.length; i++){
+            for(int j = 0; j<matrix[0].length; j++){
+                
+                if(j==0){
+                    int up = matrix[i][j] + dp[i-1][j];
+                    int right = matrix[i][j] + dp[i-1][j+1];
+                    dp[i][j] = Math.min(up, right);
+                    //System.out.println(dp[i][j]);
+                }else if(j==matrix[0].length-1){
+                    int up = matrix[i][j] + dp[i-1][j];
+                    int left = matrix[i][j] + dp[i-1][j-1];
+                    dp[i][j] = Math.min(up, left);
+                }else{
+                    int up = matrix[i][j] + dp[i-1][j];
+                    int right = matrix[i][j] + dp[i-1][j+1];
+                    int left = matrix[i][j] + dp[i-1][j-1];
+                    dp[i][j] = Math.min(Math.min(up,left), right);
+                }
+                
+                if(i==matrix.length-1){
+                    res = Math.min(res, dp[i][j]);
+                }
+                
+            }
+        }
+        
+        for(int i = 0; i<dp.length; i++){
+            for(int j = 0; j<dp[0].length; j++){
+                //System.out.println(dp[i][j]);
+            }
+        }
+        
+        return res;
     }
 }
 ```
