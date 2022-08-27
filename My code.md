@@ -531,6 +531,96 @@ class Solution {
 }
 ```
 
+# 滑动窗口
+
+## 76. Minimum Window Substring
+
+```java
+class Solution {
+    public String minWindow(String s, String t) {
+        HashMap<Character, Integer> need = new HashMap<>();
+        HashMap<Character, Integer> window = new HashMap<>();
+        for(int i = 0; i<t.length(); i++){
+            char c = t.charAt(i);
+            need.put(c, need.getOrDefault(c, 0)+1);
+        }
+        
+        int left = 0, right = 0;
+        
+        int valid = 0;
+        
+        int start = 0, end = 0;
+        int min = Integer.MAX_VALUE;
+        
+        while(right < s.length()){
+            char c  = s.charAt(right);
+            right++;
+            if(need.containsKey(c)){
+                window.put(c, window.getOrDefault(c, 0)+1);
+                if(window.get(c).equals(need.get(c))){
+                    valid++;
+                }
+            }
+            
+            while(valid==need.size()){
+                
+                int len = right - left;
+                if(len < min){
+                    min = len;
+                    start = left;
+                    end = right;
+                }
+                
+                char h = s.charAt(left);
+                left++;
+                if(need.containsKey(h)){
+                    if(need.get(h).equals(window.get(h))){
+                        valid --;
+                    }
+                    window.put(h, window.get(h)-1);
+                }
+            }
+        }
+        
+        return min != Integer.MAX_VALUE ? s.substring(start, end) : "";
+    }
+}
+```
+
+## 209. Minimum Size Subarray Sum
+
+```java
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int left = 0;
+        int right = 0;
+        int sum = 0;
+        
+        int min = Integer.MAX_VALUE;
+        while(right<nums.length){
+            int num1 = nums[right];
+            right++;
+            sum+=num1;
+            
+            while(sum>=target){
+                
+
+                if(right-left<min){
+                    min = right-left;
+                }
+                
+                int num2 = nums[left];
+                left++;
+                sum-=num2;
+        
+            }
+        }
+        
+        return min != Integer.MAX_VALUE? min : 0;
+    }
+}
+```
+
 
 
 # 二叉树
