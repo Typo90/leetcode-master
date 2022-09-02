@@ -2731,6 +2731,70 @@ class Solution {
 }
 ```
 
+# 股票问题
+
+```java
+//base case：
+dp[-1][...][0] = dp[...][0][0] = 0
+dp[-1][...][1] = dp[...][0][1] = -infinity
+
+//状态转移方程：
+dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
+dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
+```
+
+## 121. Best Time to Buy and Sell Stock
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        // k = 0
+        // dp[i][0][0] = Math.max(dp[i-1][0][0], dp[i-1][0][1] + prices[i])
+        // dp[i][0][1] = Math.max(dp[i-1][0][1], dp[i-1][-1][0] - prices[i])
+        
+        int[][] dp = new int[prices.length][2];
+        
+        for(int i = 0; i < prices.length; i++){
+            if(i-1 == -1){
+                dp[i][0] = 0;
+                dp[i][1] = -prices[i];
+                continue;
+            }
+            dp[i][0] = Math.max(dp[i-1][0], dp[i-1][1] + prices[i]);
+            dp[i][1] = Math.max(dp[i-1][1], -prices[i]);
+        }
+        
+        return dp[dp.length-1][0];
+    }
+}
+```
+
+## 123. Best Time to Buy and Sell Stock III
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int[][][] dp = new int[prices.length][3][2];
+        int k_max = 2;
+
+        for(int i = 0; i<dp.length; i++){
+            for(int k = k_max; k>=1; k--){
+                if(i-1 == -1){
+                    dp[i][k][0] = 0;
+                    dp[i][k][1] = -prices[i];
+                    continue;
+                }
+
+                dp[i][k][0] = Math.max(dp[i-1][k][0], dp[i-1][k][1] + prices[i]);
+                dp[i][k][1] = Math.max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i]);
+            }
+        }
+        
+        return dp[dp.length-1][k_max][0];
+    }
+}
+```
+
 
 
 # -----------代码随想录---------
