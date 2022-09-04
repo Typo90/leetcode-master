@@ -786,6 +786,89 @@ class Solution {
 }
 ```
 
+## 垂直遍历
+
+## 987. Vertical Order Traversal of a Binary Tree
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
+    class Triple{
+        TreeNode node;
+        int row;
+        int col;
+        
+        public Triple(TreeNode node, int row, int col){
+            this.node = node;
+            this.row = row;
+            this.col = col;
+        }
+    }
+    
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        traverse(root, 0, 0);
+        Collections.sort(list, (Triple a, Triple b) -> {
+            
+            if(a.col == b.col && a.row == b.row){
+                return a.node.val - b.node.val;
+            }
+            
+            if(a.col == b.col){
+                return a.row - b.row;
+            }
+            return a.col - b.col; 
+        });
+        
+        // for(Triple tri : list){
+        //     System.out.println(tri.node.val);
+        // }
+        
+        
+        int preCol = Integer.MIN_VALUE;
+        LinkedList<List<Integer>> res = new LinkedList<>();
+        for(int i = 0; i<list.size(); i++){
+            Triple cur = list.get(i);
+            if(cur.col != preCol){
+                res.addLast(new LinkedList<>());
+                preCol = cur.col;
+            }
+            res.getLast().add(cur.node.val);
+        }
+        
+        return res;
+    }
+    
+    List<Triple> list = new ArrayList<>();
+    
+    public void traverse(TreeNode root, int row, int col){
+        if(root == null){
+            return;
+        }
+        
+        list.add(new Triple(root, row, col));
+        traverse(root.left, row+1, col-1);
+        traverse(root.right, row+1, col+1);
+    }
+}
+```
+
+
+
 # 二叉树思路篇
 
 ## 226. Invert Binary Tree
