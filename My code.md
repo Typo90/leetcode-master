@@ -1,8 +1,10 @@
 # -----------东哥版本-----------
 
-# 双指针链表
+# 第一章
 
-## 21. Merge Two Sorted Lists
+## 双指针链表
+
+### 21. Merge Two Sorted Lists
 
 ```java
 class Solution {
@@ -36,7 +38,7 @@ class Solution {
 }
 ```
 
-## 86. Partition List
+### 86. Partition List
 
 注意断开原链表的next指针
 
@@ -82,7 +84,7 @@ class Solution {
 }
 ```
 
-## 23. Merge k Sorted Lists
+### 23. Merge k Sorted Lists
 
 ```java
 class Solution {
@@ -118,7 +120,7 @@ class Solution {
 }
 ```
 
-## 19. Remove Nth Node From End of List
+### 19. Remove Nth Node From End of List
 
 ```java
 class Solution {
@@ -148,7 +150,7 @@ class Solution {
 }
 ```
 
-## 876. Middle of the Linked List
+### 876. Middle of the Linked List
 
 ```java
 class Solution {
@@ -166,7 +168,7 @@ class Solution {
 }
 ```
 
-## 160. Intersection of Two Linked Lists
+### 160. Intersection of Two Linked Lists
 
 cur1走完a就开始走b
 
@@ -200,9 +202,9 @@ public class Solution {
 }
 ```
 
-# 递归链表
+## 递归链表
 
-## 206.Reverse Linked List
+### 206.Reverse Linked List
 
 ```java
 /**
@@ -232,7 +234,7 @@ class Solution {
 }
 ```
 
-## 92. Reverse Linked List II
+### 92. Reverse Linked List II
 
 ```java
 class Solution {
@@ -264,9 +266,9 @@ class Solution {
 }
 ```
 
-# 双指针数组
+## 双指针数组
 
-## 26. Remove Duplicates from Sorted Array
+### 26. Remove Duplicates from Sorted Array
 
 ```java
 class Solution {
@@ -293,7 +295,7 @@ class Solution {
 }
 ```
 
-## 27. Remove Element
+### 27. Remove Element
 
 ```java
 class Solution {
@@ -320,7 +322,7 @@ class Solution {
 }
 ```
 
-## 283. Move Zeroes
+### 283. Move Zeroes
 
 ```java
 class Solution {
@@ -346,7 +348,7 @@ class Solution {
 }
 ```
 
-## 167. Two Sum II - Input Array Is Sorted
+### 167. Two Sum II - Input Array Is Sorted
 
 ```java
 class Solution {
@@ -374,7 +376,7 @@ class Solution {
 }
 ```
 
-## 344. Reverse String
+### 344. Reverse String
 
 ```java
 class Solution {
@@ -397,7 +399,7 @@ class Solution {
 }
 ```
 
-## 5. Longest Palindromic Substring
+### 5. Longest Palindromic Substring
 
 从中心向两边扩散， 中心有奇数和偶数两种可能
 
@@ -441,9 +443,60 @@ class Solution {
 }
 ```
 
-# 二分搜索
+## 前缀和
 
-## 875. Koko Eating Bananas
+### 303. Range Sum Query - Immutable
+
+```java
+class NumArray {
+
+    int[] preSum;
+    
+    public NumArray(int[] nums) {
+        preSum = new int[nums.length+1];
+        for(int i = 1; i<preSum.length; i++){
+            preSum[i] = preSum[i-1] + nums[i-1]; 
+        }
+    }
+    
+    public int sumRange(int left, int right) {
+        return preSum[right+1] - preSum[left];
+    }
+}
+```
+
+
+
+## 差分数组
+
+## 二分搜索
+
+### 704. Binary Search
+
+```java
+class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length-1;
+        
+        while(left < right){
+            int mid = left + (right-left)/2;
+            if(nums[mid] > target){
+                right = mid;
+            }else if(nums[mid] < target){
+                left = mid+1;
+            }else if(nums[mid] == target){
+                right = mid;
+            }
+        }
+        return nums[left] == target ? left : -1;
+    }
+}
+```
+
+
+
+### 875. Koko Eating Bananas
 
 ```java
 class Solution {
@@ -486,7 +539,7 @@ class Solution {
 }
 ```
 
-## 1011. Capacity To Ship Packages Within D Days
+### 1011. Capacity To Ship Packages Within D Days
 
 ```java
 class Solution {
@@ -531,9 +584,9 @@ class Solution {
 }
 ```
 
-# 滑动窗口
+## 滑动窗口
 
-## 76. Minimum Window Substring
+### 76. Minimum Window Substring
 
 ```java
 class Solution {
@@ -587,7 +640,7 @@ class Solution {
 }
 ```
 
-## 209. Minimum Size Subarray Sum
+### 209. Minimum Size Subarray Sum
 
 ```java
 class Solution {
@@ -623,9 +676,9 @@ class Solution {
 
 
 
-# 二叉树
+## 二叉树
 
-## 144. Binary Tree Preorder Traversal
+### 144. Binary Tree Preorder Traversal
 
 1.递归解决
 
@@ -669,7 +722,7 @@ class Solution {
 
 
 
-## 104. Maximum Depth of Binary Tree
+### 104. Maximum Depth of Binary Tree
 
 二叉树题目的递归解法可以分两类思路，第一类是**遍历一遍二叉树**得出答案，第二类是通过**分解问题**计算出答案
 
@@ -723,7 +776,7 @@ class Solution {
 
 ## 后序遍历
 
-## 543. Diameter of Binary Tree
+### 543. Diameter of Binary Tree
 
 后续遍历实现左右最大子树之和
 
@@ -751,7 +804,7 @@ class Solution {
 
 ## 层序遍历
 
-## 515. Find Largest Value in Each Tree Row
+### 515. Find Largest Value in Each Tree Row
 
 ```java
 class Solution {
@@ -788,7 +841,7 @@ class Solution {
 
 ## 垂直遍历
 
-## 987. Vertical Order Traversal of a Binary Tree
+### 987. Vertical Order Traversal of a Binary Tree
 
 ```java
 /**
@@ -869,9 +922,9 @@ class Solution {
 
 
 
-# 二叉树思路篇
+## 二叉树思路篇
 
-## 226. Invert Binary Tree
+### 226. Invert Binary Tree
 
 ```
 class Solution {
@@ -897,7 +950,7 @@ class Solution {
 
 
 
-## 366. Find Leaves of Binary Tree
+### 366. Find Leaves of Binary Tree
 
 找到相同层的节点实际上就是找**深度一样**的叶子节点
 
@@ -933,7 +986,7 @@ class Solution {
 }
 ```
 
-## 116. Populating Next Right Pointers in Each Node
+### 116. Populating Next Right Pointers in Each Node
 
 遍历法
 
@@ -966,7 +1019,7 @@ class Solution {
 
 bfs法
 
-## 114. Flatten Binary Tree to Linked List
+### 114. Flatten Binary Tree to Linked List
 
 分解法
 
@@ -997,9 +1050,9 @@ class Solution {
 }
 ```
 
-# 构造二叉树
+## 构造二叉树
 
-## 654. Maximum Binary Tree
+### 654. Maximum Binary Tree
 
 ```java
 class Solution {
@@ -1034,7 +1087,7 @@ class Solution {
 }
 ```
 
-## 998. Maximum Binary Tree II
+### 998. Maximum Binary Tree II
 
 ```java
 class Solution {
@@ -1058,7 +1111,7 @@ class Solution {
 
 
 
-## 105. Construct Binary Tree from Preorder and Inorder Traversal
+### 105. Construct Binary Tree from Preorder and Inorder Traversal
 
 leftSize是inorder中的left长度
 
@@ -1097,7 +1150,7 @@ class Solution {
 }
 ```
 
-## 106. Construct Binary Tree from Inorder and Postorder Traversal
+### 106. Construct Binary Tree from Inorder and Postorder Traversal
 
 ```java
 class Solution {
@@ -1133,9 +1186,9 @@ class Solution {
 }
 ```
 
-# 序列化与反序列化二叉树
+## 序列化与反序列化二叉树
 
-## 297. Serialize and Deserialize Binary Tree
+### 297. Serialize and Deserialize Binary Tree
 
 ```java
 /**
@@ -1207,7 +1260,7 @@ public class Codec {
 // TreeNode ans = deser.deserialize(ser.serialize(root));
 ```
 
-## 652. Find Duplicate Subtrees
+### 652. Find Duplicate Subtrees
 
 同样是序列化思想，通过map储存所有的子树的字符串，如果子树数量>=1那么代表重复了
 
@@ -1261,9 +1314,9 @@ class Solution {
 }
 ```
 
-# BST之二叉搜索树
+## BST之二叉搜索树
 
-## 538. Convert BST to Greater Tree
+### 538. Convert BST to Greater Tree
 
 中序遍历bst实质是升序打印数值
 
@@ -1305,7 +1358,7 @@ void BST(TreeNode root, int target) {
 }
 ```
 
-## 700. Search in a Binary Search Tree
+### 700. Search in a Binary Search Tree
 
 ```java
 
@@ -1333,7 +1386,7 @@ class Solution {
 }
 ```
 
-## 701. Insert into a Binary Search Tree
+### 701. Insert into a Binary Search Tree
 
 ```java
 class Solution {
@@ -1355,7 +1408,7 @@ class Solution {
 }
 ```
 
-## 450. Delete Node in a BST
+### 450. Delete Node in a BST
 
 ```java
 
@@ -1418,9 +1471,9 @@ class Solution {
 }
 ```
 
-# 多叉树的遍历
+## 多叉树的遍历
 
-## 341. Flatten Nested List Iterator
+### 341. Flatten Nested List Iterator
 
 把nestedList中的integer和list看成多叉树的节点
 
@@ -1491,7 +1544,7 @@ public class NestedIterator implements Iterator<Integer> {
 
 找一个值=》找两个值=》
 
-## 236. Lowest Common Ancestor of a Binary Tree 
+### 236. Lowest Common Ancestor of a Binary Tree 
 
 ```java
 /**
@@ -1529,7 +1582,7 @@ class Solution {
 }
 ```
 
-## 1644. Lowest Common Ancestor of a Binary Tree II
+### 1644. Lowest Common Ancestor of a Binary Tree II
 
 这题必须是后续遍历。前序遍历时找到值就直接return了，因为值必定存在
 
@@ -1587,7 +1640,7 @@ class Solution {
 }
 ```
 
-## 235. Lowest Common Ancestor of a Binary Search Tree
+### 235. Lowest Common Ancestor of a Binary Search Tree
 
 当前root值>val1并且<val2即为LCA
 
@@ -1631,7 +1684,7 @@ class Solution {
 }
 ```
 
-## 1650. Lowest Common Ancestor of a Binary Tree III
+### 1650. Lowest Common Ancestor of a Binary Tree III
 
 本质上是双链表是否相交问题
 
@@ -1736,9 +1789,9 @@ class Solution {
 
 
 
-# 图论
+## 图论
 
-## 797. All Paths From Source to Target
+### 797. All Paths From Source to Target
 
 ```java
 class Solution {
@@ -1775,7 +1828,7 @@ class Solution {
 
 
 
-## 207. Course Schedule
+### 207. Course Schedule
 
 ```java
 class Solution {
@@ -1839,9 +1892,9 @@ class Solution {
 }
 ```
 
-# 二分图
+## 二分图
 
-## 886. Possible Bipartition
+### 886. Possible Bipartition
 
 无向图实际上是一种双向图
 
@@ -1904,9 +1957,9 @@ class Solution {
 }
 ```
 
-# KRUSKAL 最小生成树算法
+## KRUSKAL 最小生成树算法
 
-## 1135. Connecting Cities With Minimum Cost
+### 1135. Connecting Cities With Minimum Cost
 
 ```java
 class Solution {
@@ -1995,7 +2048,7 @@ class Solution {
 }
 ```
 
-# LRU cache算法
+## LRU cache算法
 
 ```java
 class LRUCache {
@@ -2172,9 +2225,9 @@ class LRUCache {
  */
 ```
 
-# 单调栈
+## 单调栈
 
-## 496. Next Greater Element I
+### 496. Next Greater Element I
 
 ```java
 class Solution {
