@@ -500,6 +500,353 @@ class NumMatrix {
 
 # 差分数组
 
+```java
+class Different{
+
+    private int[] diff;
+
+    public Different(int[] nums){
+        diff = new int[nums.length+1];
+        diff[0] = nums[0];
+        for(int i = 1; i<nums.length; i++){
+            diff[i] = nums[i]-nums[i-1];
+        }
+    }
+
+    public void incre(int left, int right, int val){
+        diff[left] += val;
+        if(right+1<diff.length){
+            diff[right+1] -= val;
+        }
+    }
+
+    public int[] res(int[] nums){
+        nums[0] = diff[0];
+        for(int i = 1; i<nums.length; i++){
+            nums[i] = nums[i-1] + diff[i];
+        }
+        return nums;
+    }
+
+}
+```
+
+### 370. Range Addition
+
+```java
+class Solution {
+    public int[] getModifiedArray(int length, int[][] updates) {
+        int[] nums = new int[length];
+        Different df = new Different(nums);
+        for(int[] op : updates){
+            int left = op[0];
+            int right = op[1];
+            int val = op[2];
+            df.incre(left, right, val);
+        }
+        nums = df.res(nums);
+        return nums;
+    }
+    
+    class Different{
+
+        private int[] diff;
+
+        public Different(int[] nums){
+            diff = new int[nums.length+1];
+            diff[0] = nums[0];
+            for(int i = 1; i<nums.length; i++){
+                diff[i] = nums[i]-nums[i-1];
+            }
+        }
+
+        public void incre(int left, int right, int val){
+            diff[left] += val;
+            if(right+1<diff.length){
+                diff[right+1] -= val;
+            }
+        }
+
+        public int[] res(int[] nums){
+            nums[0] = diff[0];
+            for(int i = 1; i<nums.length; i++){
+                nums[i] = nums[i-1] + diff[i];
+            }
+            return nums;
+        }
+
+    }
+}
+```
+
+### 1109. Corporate Flight Bookings
+
+```java
+class Solution {
+    public int[] corpFlightBookings(int[][] bookings, int n) {
+        int[] nums = new int[n];
+        Different df = new Different(nums);
+        for(int[] op : bookings){
+            
+            int left = op[0]-1;
+            int right = op[1]-1;
+            int val = op[2];
+            df.incre(left, right, val);
+        }
+        
+        return df.res(nums);
+    }
+    
+    class Different{
+        
+        private int[] diff;
+        
+        public Different(int[] nums){
+            
+            diff = new int[nums.length+1];
+            
+            diff[0] = nums[0];
+            
+            for(int i = 1; i<nums.length; i++){
+                
+                diff[i] = nums[i]-nums[i-1];
+                
+            }
+            
+        }
+        
+        public void incre(int left, int right, int val){
+            
+            diff[left] += val;
+            if(right+1<diff.length){
+                diff[right+1] -= val;
+            }
+        }
+        
+        public int[] res(int[] nums){
+            nums[0] = diff[0];
+            for(int i = 1; i<nums.length; i++){
+                
+                nums[i] = nums[i-1] + diff[i];
+                
+            }
+            
+            return nums;
+        }
+        
+        
+    }
+}
+```
+
+### 1094. Car Pooling
+
+```java
+class Solution {
+    public boolean carPooling(int[][] trips, int capacity) {
+        int[] nums = new int[1001];
+        
+        Difference df = new Difference(nums);
+        for(int[] op: trips){
+            
+            int number = op[0];
+            int left = op[1];
+            int right = op[2]-1;
+            
+            df.incre(left, right, number);
+        }
+        int[] res = df.getRes(nums);
+        
+        for(int i : res){
+            if(i>capacity){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    class Difference{
+        
+        private int[] diff;
+        
+        public Difference(int[] nums){
+            
+            diff = new int[nums.length];
+            diff[0] = nums[0];
+            for(int i = 1; i<nums.length; i++){
+                diff[i] = nums[i] - nums[i-1];
+            }
+            
+        }
+        
+        public void incre(int left, int right, int val){
+            
+            diff[left]+=val;
+            if(right+1<diff.length){
+                
+                diff[right+1] -=val;
+                
+            }
+            
+        }
+        
+        public int[] getRes(int[] nums){
+            
+            //int[] res = new int[nums.length];
+            nums[0] = diff[0];
+            
+            for(int i = 1; i<diff.length; i++){
+                nums[i] = diff[i] + nums[i-1];
+            }
+            
+            return nums;
+            
+        }
+        
+    }
+}
+```
+
+# 二维数组花式遍历
+
+## 顺/逆时针旋转矩阵
+
+**我们可以先将 `n x n` 矩阵 `matrix` 按照左上到右下的对角线进行镜像对称**：
+
+**然后再对矩阵的每一行进行反转**：
+
+### 48. Rotate Image
+
+```java
+class Solution {
+    public void rotate(int[][] matrix) {
+        for(int i = 0; i<matrix.length; i++){
+            for(int j = i; j<matrix[0].length; j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+        
+        for(int i = 0; i<matrix.length; i++){
+            reverse(matrix, i);
+        }
+    }
+    
+    public void reverse(int[][] matrix, int row){
+        int left = 0;
+        int right = matrix[0].length-1;
+        
+        while(left < right){
+            int temp = matrix[row][left];
+            matrix[row][left] = matrix[row][right];
+            matrix[row][right] = temp;
+            left ++;
+            right --;
+        }
+    }
+}
+```
+
+## 矩阵的螺旋遍历
+
+### 54. Spiral Matrix
+
+```java
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        
+        
+        List<Integer> res = new ArrayList<>();
+        int up = 0;
+        int down = matrix.length-1;
+        int left = 0;
+        int right = matrix[0].length-1;
+        
+        while(res.size() != matrix.length * matrix[0].length){
+            
+            if(up <= down){
+                for(int j = left; j<=right; j++){
+                    res.add(matrix[up][j]);
+                }
+                up++;
+            }
+            
+            if(left <= right){
+                for(int i = up; i<=down; i++){
+                    res.add(matrix[i][right]);
+                }
+                right--;
+            }
+            
+            if(up <= down){
+                for(int j = right; j>=left; j--){
+                    res.add(matrix[down][j]);
+                }
+                down--;
+            }
+            
+            if(left<=right){
+                for(int i = down; i>=up; i--){
+                    res.add(matrix[i][left]);
+                }
+                left++;
+            }
+        }
+        return res;
+    }
+}
+```
+
+### 59. Spiral Matrix II
+
+```java
+class Solution {
+    public int[][] generateMatrix(int n) {
+        int[][] matrix = new int[n][n];
+        int up = 0;
+        int down = n-1;
+        int left = 0;
+        int right = n-1;
+        
+        int num = 1;
+        while(num<=n*n){
+            if(up<=down){
+                for(int j = left; j<=right; j++){
+                    matrix[up][j] = num;
+                    num++;
+                }
+                up++;
+            }
+            if(left<=right){
+                for(int i = up; i<=down; i++){
+                    matrix[i][right] = num;
+                    num++;
+                }
+                right--;
+            }
+            if(up<=down){
+                for(int j = right; j>=left; j--){
+                    matrix[down][j] = num;
+                    num++;
+                }
+                down--;
+            }
+            if(left<=right){
+                for(int i = down; i>=up; i--){
+                    matrix[i][left] = num;
+                    num++;
+                }
+                left++;
+            }
+        }
+        return matrix;
+    }
+}
+```
+
+
+
 # 二分搜索
 
 ### 704. Binary Search
@@ -2805,6 +3152,8 @@ class Solution {
 }
 ```
 
+# =======第三章========
+
 # 岛屿问题
 
 ### 200. Number of Islands
@@ -3049,7 +3398,48 @@ class Solution {
 }
 ```
 
-# 
+# 区间问题
+
+### 1288. Remove Covered Intervals
+
+```java
+class Solution {
+    public int removeCoveredIntervals(int[][] intervals) {
+        Arrays.sort(intervals, (a,b)->{
+            if(a[0]-b[0]==0){
+                return b[1] - a[1];
+            }else{
+                return a[0] - b[0];
+            }
+        });
+        
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        
+        int res = 0;
+        
+        for(int i = 1; i<intervals.length; i++){
+            int left = intervals[i][0];
+            int right = intervals[i][1];
+            
+            if(left>=start && right<=end){
+                res++;
+            }
+            if(left >=start && right>end){
+                end = right;
+            }
+            if(left >= end){
+                start = left;
+                end = right;
+            }
+        }
+        
+        return intervals.length-res;
+    }
+}
+```
+
+# 接雨水
 
 # -----------代码随想录---------
 
