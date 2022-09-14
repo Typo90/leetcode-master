@@ -1,8 +1,8 @@
 # -----------东哥版本-----------
 
-# 第一章
+# =======第一章========
 
-## 双指针链表
+# 双指针链表
 
 ### 21. Merge Two Sorted Lists
 
@@ -266,7 +266,7 @@ class Solution {
 }
 ```
 
-## 双指针数组
+# 双指针数组
 
 ### 26. Remove Duplicates from Sorted Array
 
@@ -443,7 +443,7 @@ class Solution {
 }
 ```
 
-## 前缀和
+# 前缀和
 
 ### 303. Range Sum Query - Immutable
 
@@ -465,11 +465,42 @@ class NumArray {
 }
 ```
 
+### 304. Range Sum Query 2D - Immutable
+
+```java
+class NumMatrix {
+
+    int[][] preSum;
+    
+    public NumMatrix(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        if (m == 0 || n == 0) return;
+        preSum = new int[m+1][n+1];
+        for(int i = 1; i<m+1; i++){
+            for(int j = 1; j<n+1; j++){
+                preSum[i][j] = preSum[i-1][j] + preSum[i][j-1] + matrix[i-1][j-1] - preSum[i-1][j-1]; 
+            }
+        }
+    }
+    
+    public int sumRegion(int row1, int col1, int row2, int col2) {
+        return preSum[row2+1][col2+1] - preSum[row1][col2+1] - preSum[row2+1][col1] + preSum[row1][col1];
+    }
+}
+
+/**
+ * Your NumMatrix object will be instantiated and called as such:
+ * NumMatrix obj = new NumMatrix(matrix);
+ * int param_1 = obj.sumRegion(row1,col1,row2,col2);
+ */
+```
 
 
-## 差分数组
 
-## 二分搜索
+# 差分数组
+
+# 二分搜索
 
 ### 704. Binary Search
 
@@ -584,7 +615,7 @@ class Solution {
 }
 ```
 
-## 滑动窗口
+# 滑动窗口
 
 ### 76. Minimum Window Substring
 
@@ -676,7 +707,7 @@ class Solution {
 
 
 
-## 二叉树
+# 二叉树
 
 ### 144. Binary Tree Preorder Traversal
 
@@ -1789,7 +1820,9 @@ class Solution {
 
 
 
-## 图论
+# 图论
+
+## 图论基础
 
 ### 797. All Paths From Source to Target
 
@@ -2048,6 +2081,89 @@ class Solution {
 }
 ```
 
+## Dijkstra
+
+### 743. Network Delay Time
+
+```java
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        List<int[]>[] graph = new LinkedList[n+1];
+        for(int i = 1; i<=n; i++){
+            graph[i] = new LinkedList<>();
+        }
+        
+        for(int[] edge : times){
+            int from = edge[0];
+            int to = edge[1];
+            int weight = edge[2];
+            graph[from].add(new int[]{to, weight});
+        }
+        
+        int[] distTo = dijkstra(k, graph);
+        
+        int res = 0;
+        for(int i = 1; i<distTo.length; i++){
+            if(distTo[i] == Integer.MAX_VALUE){
+                return -1;
+            }
+            res = Math.max(res, distTo[i]);
+        }
+        
+        return res;
+    }
+    
+    class State{
+        int id;
+        int distFromStart;
+        
+        State(int id, int distFromStart){
+            this.id = id;
+            this.distFromStart = distFromStart;
+        }
+    }
+    
+    public int[] dijkstra(int start, List<int[]>[] graph){
+        int[] distTo = new int[graph.length];
+        Arrays.fill(distTo, Integer.MAX_VALUE);
+        distTo[start] = 0;
+        
+        Queue<State> pq = new PriorityQueue<>((a,b)->{
+            return a.distFromStart - b.distFromStart;
+        });
+        
+        pq.offer(new State(start, 0));
+        
+        while(!pq.isEmpty()){
+            State curState = pq.poll();
+            int curID = curState.id;
+            int curDistFromStart = curState.distFromStart;
+            
+            if(curDistFromStart > distTo[curID]){
+                continue;
+            }
+            
+            for(int[] neighbor : graph[curID]){
+                int nextID = neighbor[0];
+                int distToNext = distTo[curID] + neighbor[1];
+                if(distTo[nextID] > distToNext){
+                    distTo[nextID] = distToNext;
+                    pq.offer(new State(nextID, distToNext));
+                }
+            }
+        }
+        
+        return distTo;
+    }
+    
+    
+}
+```
+
+
+
+# 设计数据结构
+
 ## LRU cache算法
 
 ```java
@@ -2262,7 +2378,7 @@ class Solution {
 }
 ```
 
-## 739. Daily Temperatures
+### 739. Daily Temperatures
 
 ```java
 class Solution {
@@ -2291,7 +2407,7 @@ class Solution {
 }
 ```
 
-## 503. Next Greater Element II
+### 503. Next Greater Element II
 
 环形数组采取两倍数组长
 
@@ -2319,255 +2435,13 @@ class Solution {
 }
 ```
 
-# 岛屿问题
+# =======第二章========
 
-## 200. Number of Islands
-
-```java
-class Solution {
-    
-    boolean[][] visited;
-    
-    public int numIslands(char[][] grid) {
-        visited = new boolean[grid.length][grid[0].length];
-        int res = 0;
-        for(int i = 0; i<grid.length; i++){
-            for(int j = 0; j<grid[0].length; j++){
-                
-                if(grid[i][j]=='1'){
-                    res ++;
-                    dfs(i, j, grid);
-                }
-                
-            }
-        }
-        return res;
-    }
-    
-    
-    public void dfs(int row, int col, char[][] grid){
-        
-        if(col>=grid[0].length || row >= grid.length || col<0 || row<0){
-            return;
-        }
-        
-        if(visited[row][col]==true){
-            return;
-        }
-        
-        if(grid[row][col]=='0'){
-            return;
-        }
-        
-        grid[row][col] = '0';
-        
-        dfs(row, col+1, grid);
-        dfs(row+1, col, grid);
-        dfs(row, col-1, grid);
-        dfs(row-1, col, grid);
-        
-    }
-}
-```
-
-## 695. Max Area of Island
-
-```java
-class Solution {
-    
-    int count = 0;
-    int res = 0;
-    
-    public int maxAreaOfIsland(int[][] grid) {
-        for(int i = 0; i<grid.length; i++){
-            for(int j = 0; j<grid[0].length; j++){
-                
-                if(grid[i][j]==1){
-                    count = 0;
-                    dfs(grid, i, j);
-                    res = Math.max(res, count);
-                }
-                
-            }
-        }
-        
-        return res;
-    }
-    
-    public void dfs(int[][] grid, int row, int col){
-        
-        if(row>=grid.length || row <0 || col>=grid[0].length || col <0){
-            return;
-        }
-        
-        if(grid[row][col]==0){
-            return;
-        }
-        
-        grid[row][col] = 0;
-        count++;
-        
-        dfs(grid, row+1, col);
-        dfs(grid, row, col+1);
-        dfs(grid, row-1, col);
-        dfs(grid, row, col-1);
-    }
-}
-```
-
-
-
-## 1254. Number of Closed Islands
-
-```java
-class Solution {
-    public int closedIsland(int[][] grid) {
-        
-        int res = 0;
-        
-        for(int i = 0; i<grid[0].length; i++){
-            dfs(grid, 0, i);
-            dfs(grid, grid.length-1, i);
-        }
-        
-        for(int i = 0; i<grid.length; i++){
-            dfs(grid, i, 0);
-            dfs(grid, i, grid[0].length-1);
-        }
-        
-        for(int i = 0; i<grid.length; i++){
-            for(int j = 0; j<grid[0].length; j++){
-                
-                if(grid[i][j]==0){
-                    res++;
-                    dfs(grid, i, j);
-                }
-                
-            }
-        }
-        return res;
-    }
-    
-    public void dfs(int[][] grid, int row, int col){
-        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
-            return;
-        }
-        
-        if(grid[row][col]==1){
-            return;
-        }
-        
-        grid[row][col] = 1;
-        dfs(grid, row+1, col);
-        dfs(grid, row, col+1);
-        dfs(grid, row-1, col);
-        dfs(grid, row, col-1);
-    }
-}
-```
-
-## 1905. Count Sub Islands
-
-```java
-class Solution {
-    public int countSubIslands(int[][] grid1, int[][] grid2) {
-        
-        int res = 0;
-        
-        for(int i = 0; i<grid1.length; i++){
-            for(int j = 0; j<grid1[0].length; j++){   
-                if(grid2[i][j]==1 && grid1[i][j]==0){
-                    dfs(grid2, i, j);
-                }
-            }
-        }
-        
-        for(int i = 0; i<grid1.length; i++){
-            for(int j = 0; j<grid1[0].length; j++){   
-                if(grid2[i][j]==1 && grid1[i][j]==1){
-                    res++;
-                    dfs(grid2, i, j);
-                }
-            }
-        }
-        
-        return res;
-        
-    }
-    
-    public void dfs(int[][] grid, int row, int col){
-        
-        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
-            return;
-        }
-        
-        if(grid[row][col] == 0){
-            return;
-        }
-        
-        grid[row][col] = 0;
-        dfs(grid, row+1, col);
-        dfs(grid, row-1, col);
-        dfs(grid, row, col+1);
-        dfs(grid, row, col-1);
-        
-    }
-}
-```
-
-## 694. Number of Distinct Islands
-
-通过方向1, 2, 3, 4判断是否为同一个岛屿，并转换为方向string
-
-```java
-class Solution {
-    public int numDistinctIslands(int[][] grid) {
-        HashSet<String> set = new HashSet<>();
-        for(int i = 0; i<grid.length; i++){
-            for(int j = 0; j<grid[0].length; j++){
-                
-                if(grid[i][j]==1){
-                    StringBuilder sb = new StringBuilder();
-                    dfs(grid, i, j, 20, sb);
-                    set.add(sb.toString());
-                }
-                
-            }
-        }
-        
-        return set.size();
-    }
-    
-    public void dfs(int[][] grid, int row, int col, int dir, StringBuilder sb){
-        
-        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
-            return;
-        }
-        
-        if(grid[row][col]==0){
-            return;
-        }
-        
-        grid[row][col] = 0;
-        
-        sb.append(dir);
-        sb.append(",");
-        dfs(grid, row+1, col, 1, sb);
-        dfs(grid, row-1, col, 2, sb);
-        dfs(grid, row, col+1, 3, sb);
-        dfs(grid, row, col-1, 4, sb);
-        sb.append(-dir);
-        sb.append(",");
-        
-    }
-}
-```
-
-# 动态规划
+# 动态规划基础
 
 1.确定状态
 
-## 509. Fibonacci Number
+### 509. Fibonacci Number
 
 1.递归+记忆
 
@@ -2622,7 +2496,7 @@ class Solution {
 
 ## 最长递增子序列
 
-## 300. Longest Increasing Subsequence
+### 300. Longest Increasing Subsequence
 
 DP做法
 
@@ -2686,7 +2560,7 @@ class Solution {
 }
 ```
 
-## 354. Russian Doll Envelopes
+### 354. Russian Doll Envelopes
 
 将信封的width增序排序，hegith降序排序
 
@@ -2734,9 +2608,9 @@ class Solution {
 }
 ```
 
-# 最小路径和
+## 最小路径和
 
-## 64. Minimum Path Sum
+### 64. Minimum Path Sum
 
 ```java
 class Solution {
@@ -2763,7 +2637,7 @@ class Solution {
 }
 ```
 
-## 931. Minimum Falling Path Sum
+### 931. Minimum Falling Path Sum
 
 ```java
 class Solution {
@@ -2820,9 +2694,9 @@ class Solution {
 }
 ```
 
-# 魔塔
+## 魔塔
 
-## 174. Dungeon Game
+### 174. Dungeon Game
 
 从右下角往左上角dp
 
@@ -2867,7 +2741,7 @@ class Solution {
 }
 ```
 
-# 股票问题
+## 股票问题
 
 ```java
 //base case：
@@ -2879,7 +2753,7 @@ dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
 dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
 ```
 
-## 121. Best Time to Buy and Sell Stock
+### 121. Best Time to Buy and Sell Stock
 
 ```java
 class Solution {
@@ -2905,7 +2779,7 @@ class Solution {
 }
 ```
 
-## 123. Best Time to Buy and Sell Stock III
+### 123. Best Time to Buy and Sell Stock III
 
 ```java
 class Solution {
@@ -2931,7 +2805,251 @@ class Solution {
 }
 ```
 
+# 岛屿问题
 
+### 200. Number of Islands
+
+```java
+class Solution {
+    
+    boolean[][] visited;
+    
+    public int numIslands(char[][] grid) {
+        visited = new boolean[grid.length][grid[0].length];
+        int res = 0;
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                
+                if(grid[i][j]=='1'){
+                    res ++;
+                    dfs(i, j, grid);
+                }
+                
+            }
+        }
+        return res;
+    }
+    
+    
+    public void dfs(int row, int col, char[][] grid){
+        
+        if(col>=grid[0].length || row >= grid.length || col<0 || row<0){
+            return;
+        }
+        
+        if(visited[row][col]==true){
+            return;
+        }
+        
+        if(grid[row][col]=='0'){
+            return;
+        }
+        
+        grid[row][col] = '0';
+        
+        dfs(row, col+1, grid);
+        dfs(row+1, col, grid);
+        dfs(row, col-1, grid);
+        dfs(row-1, col, grid);
+        
+    }
+}
+```
+
+### 695. Max Area of Island
+
+```java
+class Solution {
+    
+    int count = 0;
+    int res = 0;
+    
+    public int maxAreaOfIsland(int[][] grid) {
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                
+                if(grid[i][j]==1){
+                    count = 0;
+                    dfs(grid, i, j);
+                    res = Math.max(res, count);
+                }
+                
+            }
+        }
+        
+        return res;
+    }
+    
+    public void dfs(int[][] grid, int row, int col){
+        
+        if(row>=grid.length || row <0 || col>=grid[0].length || col <0){
+            return;
+        }
+        
+        if(grid[row][col]==0){
+            return;
+        }
+        
+        grid[row][col] = 0;
+        count++;
+        
+        dfs(grid, row+1, col);
+        dfs(grid, row, col+1);
+        dfs(grid, row-1, col);
+        dfs(grid, row, col-1);
+    }
+}
+```
+
+
+
+### 1254. Number of Closed Islands
+
+```java
+class Solution {
+    public int closedIsland(int[][] grid) {
+        
+        int res = 0;
+        
+        for(int i = 0; i<grid[0].length; i++){
+            dfs(grid, 0, i);
+            dfs(grid, grid.length-1, i);
+        }
+        
+        for(int i = 0; i<grid.length; i++){
+            dfs(grid, i, 0);
+            dfs(grid, i, grid[0].length-1);
+        }
+        
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                
+                if(grid[i][j]==0){
+                    res++;
+                    dfs(grid, i, j);
+                }
+                
+            }
+        }
+        return res;
+    }
+    
+    public void dfs(int[][] grid, int row, int col){
+        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
+            return;
+        }
+        
+        if(grid[row][col]==1){
+            return;
+        }
+        
+        grid[row][col] = 1;
+        dfs(grid, row+1, col);
+        dfs(grid, row, col+1);
+        dfs(grid, row-1, col);
+        dfs(grid, row, col-1);
+    }
+}
+```
+
+### 1905. Count Sub Islands
+
+```java
+class Solution {
+    public int countSubIslands(int[][] grid1, int[][] grid2) {
+        
+        int res = 0;
+        
+        for(int i = 0; i<grid1.length; i++){
+            for(int j = 0; j<grid1[0].length; j++){   
+                if(grid2[i][j]==1 && grid1[i][j]==0){
+                    dfs(grid2, i, j);
+                }
+            }
+        }
+        
+        for(int i = 0; i<grid1.length; i++){
+            for(int j = 0; j<grid1[0].length; j++){   
+                if(grid2[i][j]==1 && grid1[i][j]==1){
+                    res++;
+                    dfs(grid2, i, j);
+                }
+            }
+        }
+        
+        return res;
+        
+    }
+    
+    public void dfs(int[][] grid, int row, int col){
+        
+        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
+            return;
+        }
+        
+        if(grid[row][col] == 0){
+            return;
+        }
+        
+        grid[row][col] = 0;
+        dfs(grid, row+1, col);
+        dfs(grid, row-1, col);
+        dfs(grid, row, col+1);
+        dfs(grid, row, col-1);
+        
+    }
+}
+```
+
+### 694. Number of Distinct Islands
+
+通过方向1, 2, 3, 4判断是否为同一个岛屿，并转换为方向string
+
+```java
+class Solution {
+    public int numDistinctIslands(int[][] grid) {
+        HashSet<String> set = new HashSet<>();
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                
+                if(grid[i][j]==1){
+                    StringBuilder sb = new StringBuilder();
+                    dfs(grid, i, j, 20, sb);
+                    set.add(sb.toString());
+                }
+                
+            }
+        }
+        
+        return set.size();
+    }
+    
+    public void dfs(int[][] grid, int row, int col, int dir, StringBuilder sb){
+        
+        if(row>=grid.length || row<0 || col>=grid[0].length || col<0){
+            return;
+        }
+        
+        if(grid[row][col]==0){
+            return;
+        }
+        
+        grid[row][col] = 0;
+        
+        sb.append(dir);
+        sb.append(",");
+        dfs(grid, row+1, col, 1, sb);
+        dfs(grid, row-1, col, 2, sb);
+        dfs(grid, row, col+1, 3, sb);
+        dfs(grid, row, col-1, 4, sb);
+        sb.append(-dir);
+        sb.append(",");
+        
+    }
+}
+```
+
+# 
 
 # -----------代码随想录---------
 
