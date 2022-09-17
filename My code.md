@@ -2,6 +2,8 @@
 
 # =======第一章========
 
+# 团灭nSum
+
 # 双指针链表
 
 ### 21. Merge Two Sorted Lists
@@ -3152,6 +3154,73 @@ class Solution {
 }
 ```
 
+# 贪心算法
+
+### 435. Non-overlapping Intervals
+
+```java
+class Solution {
+    public int eraseOverlapIntervals(int[][] intervals) {
+        Arrays.sort(intervals, (a,b)->{
+           return a[1]-b[1]; 
+        });
+        
+
+        
+        int count = 1;
+        int end = intervals[0][1];
+        for(int[] intv : intervals){
+            int start = intv[0];
+            if(start >= end){
+                count++;
+                end = intv[1];
+            }
+        }
+        
+        return intervals.length - count;
+    }
+}
+```
+
+## 253. Meeting Rooms II
+
+```java
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        int[] start = new int[intervals.length];
+        int[] end = new int[intervals.length];
+        for(int i = 0; i<intervals.length; i++){
+            start[i] = intervals[i][0];
+            end[i] = intervals[i][1];
+        }
+        
+        Arrays.sort(start);
+        Arrays.sort(end);
+        
+        int count = 0;
+        int res = 0;
+        
+        int i = 0;
+        int j = 0;
+        
+        while(i<start.length && j<end.length){
+            if(start[i] < end[j]){
+                i++;
+                count++;
+            }else{
+                count--;
+                j++;
+            }
+            res = Math.max(res, count);
+        }
+        
+        return res;
+    }
+}
+```
+
+
+
 # =======第三章========
 
 # 岛屿问题
@@ -3440,6 +3509,8 @@ class Solution {
 ```
 
 # 接雨水
+
+
 
 # -----------代码随想录---------
 
