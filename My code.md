@@ -3510,6 +3510,54 @@ class Solution {
 
 # 接雨水
 
+### 42. Trapping Rain Water
+
+备忘录做法(O(n))
+
+```java
+class Solution {
+    public int trap(int[] height) {
+        
+        int n = height.length;
+        int res = 0;
+        
+        int[] l_max = new int[n];
+        int[] r_max = new int[n];
+        
+        l_max[0] = height[0];
+        r_max[n-1] = height[n-1];
+        
+        for(int i = 1; i<n; i++){
+            l_max[i] = Math.max(l_max[i-1], height[i]);
+        }
+        
+        for(int i = n-2; i>=0; i--){
+            r_max[i] = Math.max(r_max[i+1], height[i]);
+        }
+        
+        for(int i = 0; i<n; i++){
+            // int l_max = 0;
+            // int r_max = 0;
+            
+//             for(int j = i; j>=0; j--){
+//                 l_max = Math.max(l_max, height[j]);
+//             }
+            
+//             for(int j = i; j<n; j++){
+//                 r_max = Math.max(r_max, height[j]);
+//             }
+            
+            
+            
+            res =  res + Math.min(r_max[i], l_max[i]) - height[i]; 
+        }
+        
+        
+        return res;
+    }
+}
+```
+
 
 
 # -----------代码随想录---------
@@ -8940,6 +8988,46 @@ class Solution {
         
         return dp[dp.length-1][1];
         
+    }
+}
+```
+
+# ----------------------------------
+
+## 根据括号反转字符串
+
+### 1190. Reverse Substrings Between Each Pair of Parentheses
+
+```java
+class Solution {
+    public String reverseParentheses(String s) {
+        Stack<Integer> stack = new Stack<>();
+        int n = s.length();
+        int[] pair = new int[n];
+
+        for(int i = 0; i<n; i++){
+            char c = s.charAt(i);
+            if(c == '('){
+                stack.push(i);
+            }else if(c == ')'){
+                int j = stack.pop();
+                pair[i] = j;
+                pair[j] = i;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0, d = 1; i<n; i+=d){
+            char c = s.charAt(i);
+            if(c == '(' || c == ')'){
+                i = pair[i];
+                d = -d;
+            }else{
+                sb.append(c);
+            }
+        }
+
+        return sb.toString();
     }
 }
 ```
