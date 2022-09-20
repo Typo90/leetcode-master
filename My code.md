@@ -8994,6 +8994,8 @@ class Solution {
 
 # ----------------------------------
 
+# CodeSignal
+
 ## 根据括号反转字符串
 
 ### 1190. Reverse Substrings Between Each Pair of Parentheses
@@ -9029,6 +9031,18 @@ class Solution {
 
         return sb.toString();
     }
+}
+```
+
+### 是否为合法字符串
+
+Correct variable names consist only of English letters, digits and underscores and they can't start with a digit.
+
+Check if the given string is a correct variable name.
+
+```java
+boolean solution(String name) {
+    return name.matches("[a-zA-Z_]+[a-zA-Z_0-9]*");
 }
 ```
 
