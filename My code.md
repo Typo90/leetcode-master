@@ -4,6 +4,94 @@
 
 # 团灭nSum
 
+### 15. 3Sum
+
+```java
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        for(int i = 0; i<nums.length; i++){
+            if(i > 0 && nums[i-1] == nums[i]){
+                continue;
+            }
+            
+            int left = i + 1;
+            int right = nums.length-1;
+            while(left < right){
+                int sum = nums[i] + nums[left] + nums[right];
+                if(sum > 0){
+                    right--;
+                }else if(sum < 0){
+                    left++;
+                }else{
+                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    while(left < right && nums[left] == nums[left+1]) left++;
+                    while(left < right && nums[right] == nums[right-1]) right--;
+                    left++;
+                    right--;
+                }
+            }
+        }
+        
+        return res;
+    }
+}
+```
+
+### 18. 4Sum
+
+```java
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+
+        for(int i = 0; i<nums.length; i++){
+            if(i>0 && nums[i] == nums[i-1]){
+                continue;
+            }
+            for(int j = i+1; j<nums.length; j++){
+                
+                if(j>i+1 && nums[j] == nums[j-1]){
+                    continue;
+                }
+                
+                int left = j + 1;
+                int right = nums.length-1;
+                
+                while(left < right){
+                    
+                    if(nums[i]==nums[j] && nums[i] == nums[left] && nums[i] == nums[right] && nums[i]==1000000000){
+                        return res;
+                    }
+                    
+                    int sum = nums[i] + nums[j] + nums[left] + nums[right];
+
+                    
+                    if(sum > target){
+                        right--;
+                    }else if(sum < target){
+                        left ++;
+                    }else{
+                        res.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        while(left < right && nums[left] == nums[left+1]) left++;
+                        while(left < right && nums[right] == nums[right-1]) right--;
+                        left++;
+                        right--;
+                    }
+                    
+                }
+                
+            }
+        }
+        return res;
+    }
+}
+```
+
+
+
 # 双指针链表
 
 ### 21. Merge Two Sorted Lists
@@ -204,7 +292,7 @@ public class Solution {
 }
 ```
 
-## 递归链表
+# 反转链表
 
 ### 206.Reverse Linked List
 
@@ -237,6 +325,8 @@ class Solution {
 ```
 
 ### 92. Reverse Linked List II
+
+反转链表其中的一部分
 
 ```java
 class Solution {
@@ -2339,6 +2429,91 @@ class Solution {
 }
 ```
 
+# 并查集 union-find
+
+### 990. Satisfiability of Equality Equations
+
+```java
+class Solution {
+    public boolean equationsPossible(String[] equations) {
+        UF uf = new UF(26);
+        
+        for(String eq : equations){
+            char first = eq.charAt(0);
+            char op = eq.charAt(1);
+            char second = eq.charAt(3);
+            if(op == '='){
+                uf.union(first-'a', second-'a');
+            }
+        }
+        
+        for(String eq : equations){
+            char first = eq.charAt(0);
+            char op = eq.charAt(1);
+            char second = eq.charAt(3);
+            if(op == '!'){
+                if(uf.connected(first-'a', second-'a')){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    class UF{
+        int[] parent;
+        int[] size;
+        int count;
+        
+        public UF (int n){
+            parent = new int[n];
+            size = new int[n];
+            count = n;
+            for(int i = 0; i<n; i++){
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+        
+        public int find(int x){
+            while(x!=parent[x]){
+                parent[x] = parent[parent[x]];
+                x = parent[x];
+            }
+            return parent[x];
+        }
+        
+        public void union(int p, int q){
+            int rootP = find(p);
+            int rootQ = find(q);
+            if(rootP == rootQ){
+                return;
+            }
+            if(size[rootP] >= size[rootQ]){
+                parent[rootQ] = rootP;
+                size[rootP] += size[rootQ];
+            }else{
+                parent[rootP] = rootQ;
+                size[rootQ] += size[rootP];
+            }
+            count--;
+        }
+        
+        public boolean connected(int p, int q){
+            int rootP = find(p);
+            int rootQ = find(q);
+            return rootP == rootQ;
+        }
+        
+        public int count(){
+            return this.count;
+        }
+    }
+}
+```
+
+
+
 ## KRUSKAL 最小生成树算法
 
 ### 1135. Connecting Cities With Minimum Cost
@@ -2514,6 +2689,8 @@ class Solution {
 # 设计数据结构
 
 ## LRU cache算法
+
+### 146. LRU Cache
 
 ```java
 class LRUCache {
@@ -2783,6 +2960,100 @@ class Solution {
     }
 }
 ```
+
+## 用链表实现环形queue
+
+### 622. Design Circular Queue
+
+```java
+class Node{
+    public int value;
+    public Node next;
+
+    public Node(int value){
+        this.value = value;
+        this.next = null;
+    }
+}
+    
+class MyCircularQueue {
+
+    Node head;
+    Node tail;
+    int count;
+    int size;
+    
+    public MyCircularQueue(int k) {
+        this.size = k;
+    }
+    
+    public boolean enQueue(int value) {
+        if(count < size){
+            Node newNode = new Node(value);
+            if(count == 0){
+                head = newNode;
+                tail = newNode;
+            }else{
+                tail.next = newNode;
+                tail = newNode;
+            }
+            count++;
+            return true;
+            
+        }else{
+            return false;
+        }
+    }
+    
+    public boolean deQueue() {
+        if(count != 0){
+            head = head.next;
+            count-=1;
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+    
+    public int Front() {
+        if(count != 0){
+            return head.value;
+        }else{
+            return -1;
+        }
+    }
+    
+    public int Rear() {
+        if(count != 0){
+            return tail.value;
+        }else{
+            return -1;
+        }
+    }
+    
+    public boolean isEmpty() {
+        return count == 0;
+    }
+    
+    public boolean isFull() {
+        return count == size;
+    }
+}
+
+/**
+ * Your MyCircularQueue object will be instantiated and called as such:
+ * MyCircularQueue obj = new MyCircularQueue(k);
+ * boolean param_1 = obj.enQueue(value);
+ * boolean param_2 = obj.deQueue();
+ * int param_3 = obj.Front();
+ * int param_4 = obj.Rear();
+ * boolean param_5 = obj.isEmpty();
+ * boolean param_6 = obj.isFull();
+ */
+```
+
+
 
 # =======第二章========
 
@@ -3182,7 +3453,7 @@ class Solution {
 }
 ```
 
-## 253. Meeting Rooms II
+### 253. Meeting Rooms II
 
 ```java
 class Solution {
@@ -3558,7 +3829,7 @@ class Solution {
 }
 ```
 
-
+# 位运算
 
 # -----------代码随想录---------
 
