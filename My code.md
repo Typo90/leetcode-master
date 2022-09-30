@@ -3494,6 +3494,48 @@ class Solution {
 
 # =======第三章========
 
+# 回溯算法
+
+### 22. Generate Parentheses
+
+```java
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        StringBuilder sb = new StringBuilder();
+        List<String> res = new ArrayList<>();
+        backtracking(n, n, sb, res);
+        return res;
+    }
+    
+    public void backtracking(int left, int right, StringBuilder sb, List<String> res){
+        
+        if(right < left){
+            return;
+        }
+        
+        if(left < 0 || right < 0){
+            return;
+        }
+        
+        if(left == 0 && right == 0){
+            res.add(sb.toString());
+            return;
+        }
+        
+        sb.append('(');
+        backtracking(left - 1, right, sb, res);
+        sb.deleteCharAt(sb.length()-1);
+        
+        sb.append(')');
+        backtracking(left, right - 1, sb, res);
+        sb.deleteCharAt(sb.length()-1);
+        
+    }
+}
+```
+
+
+
 # 岛屿问题
 
 ### 200. Number of Islands
