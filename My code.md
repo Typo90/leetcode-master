@@ -90,6 +90,40 @@ class Solution {
 }
 ```
 
+# 字符串
+
+### 71. Simplify Path（linux 路径）
+
+```java
+class Solution {
+    public String simplifyPath(String path) {
+        String[] parts = path.split("/");
+        Stack<String> stack = new Stack<>();
+        
+        for(String part : parts){
+            if(part.isEmpty() || part.equals(".")){
+                continue;
+            }
+            
+            if(part.equals("..")){
+                if(!stack.isEmpty()){
+                    stack.pop();
+                }
+                continue;
+            }
+            stack.push(part);
+        }
+        
+        String res = "";
+        while(!stack.isEmpty()){
+            res = '/' + stack.pop() + res;
+        }
+        
+        return res.isEmpty() ? "/" : res;
+    }
+}
+```
+
 
 
 # 双指针链表
@@ -357,6 +391,55 @@ class Solution {
     }
 }
 ```
+
+# K个一组反转链表
+
+### 25. Reverse Nodes in k-Group
+
+```
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode a = head;
+        ListNode b = head;
+        for(int i = 0; i<k; i++){
+            if(b == null){
+                return head;
+            }
+            b = b.next;
+        }
+        
+        ListNode newHead = reverse(a, b);
+        a.next = reverseKGroup(b, k);
+        return newHead;
+    }
+    
+    public ListNode reverse(ListNode a, ListNode b){
+        ListNode pre, cur, next;
+        pre = null;
+        cur = a;
+        next = a;
+        
+        while(cur != b){
+            next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        
+        return pre;
+    }
+}
+```
+
+# 判断链表是否回文
+
+### 234. Palindrome Linked List
+
+```
+
+```
+
+
 
 # 双指针数组
 
@@ -3053,6 +3136,100 @@ class MyCircularQueue {
  */
 ```
 
+## HashMap套HashMap
+
+### 981. Time Based Key-Value Store
+
+```java
+class TimeMap {
+
+    HashMap<String, HashMap<Integer, String>> map;
+    
+    public TimeMap() {
+        map = new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        if(map.containsKey(key)){
+            HashMap<Integer, String> tp = map.get(key);
+            tp.put(timestamp, value);
+            map.put(key, tp);
+        }else{
+            HashMap<Integer, String> tp = new HashMap<Integer, String>();
+            tp.put(timestamp, value);
+            map.put(key, tp);
+        }
+    }
+    
+    public String get(String key, int timestamp) {
+        if(map.containsKey(key)){
+            HashMap<Integer, String> tp = map.get(key);
+            for(int curTime = timestamp; curTime>=1; curTime--){
+                if(tp.containsKey(curTime)){
+                    return tp.get(curTime);
+                }
+                
+            }
+        }
+        return "";
+    
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.set(key,value,timestamp);
+ * String param_2 = obj.get(key,timestamp);
+ */
+```
+
+使用treeMap 
+
+put时间复杂度O(L * M * log(M))
+
+get时间复杂度O(L * log(M))
+
+```java
+class TimeMap {
+
+    HashMap<String, TreeMap<Integer, String>> map;
+    
+    public TimeMap() {
+        map = new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        if(map.containsKey(key)){
+            TreeMap<Integer, String> tp = map.get(key);
+            tp.put(timestamp, value);
+            map.put(key, tp);
+        }else{
+            TreeMap<Integer, String> tp = new TreeMap<Integer, String>();
+            tp.put(timestamp, value);
+            map.put(key, tp);
+        }
+    }
+    
+    public String get(String key, int timestamp) {
+        if(map.containsKey(key)){
+            TreeMap<Integer, String> tp = map.get(key);
+            Integer floorKey = tp.floorKey(timestamp);
+            return floorKey == null ? "" : tp.get(floorKey);
+        }
+        return "";
+    
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.set(key,value,timestamp);
+ * String param_2 = obj.get(key,timestamp);
+ */
+```
+
 
 
 # =======第二章========
@@ -3490,8 +3667,6 @@ class Solution {
 }
 ```
 
-
-
 # =======第三章========
 
 # 回溯算法
@@ -3872,6 +4047,164 @@ class Solution {
 ```
 
 # 位运算
+
+## n & (n-1)
+
+去掉最后一位1
+
+### 191. Number of 1 Bits
+
+```java
+public class Solution {
+    // you need to treat n as an unsigned value
+    public int hammingWeight(int n) {
+        int res = 0;
+        while(n != 0){
+            n  = n & (n-1);
+            res++;
+        }
+        return res;
+    }
+}
+```
+
+## 231. Power of Two
+
+```java
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        if(n<=0){
+            return false;
+        }
+        return (n & (n-1)) == 0;
+    }
+}
+```
+
+## ^
+
+a^a = 0
+
+a^0 = a
+
+### 136. Single Number
+
+```java
+class Solution {
+    public int singleNumber(int[] nums) {
+        
+        int a = 0;
+        
+        for(int i : nums){
+            
+            a = a^i;
+            
+        }
+        
+        return a;
+    }
+}
+```
+
+### 268. Missing Number
+
+```java
+class Solution {
+    public int missingNumber(int[] nums) {
+        int n = nums.length;
+        int res = 0;
+        res ^= n;
+        
+        for(int i = 0; i<n; i++){
+            res = res ^ (nums[i] ^ i);
+        }
+        
+        return res;
+    }
+}
+```
+
+# 分治
+
+### 241. Different Ways to Add Parentheses
+
+```java
+class Solution {
+    public List<Integer> diffWaysToCompute(String expression) {
+        List<Integer> res = new ArrayList<>();
+        for(int i = 0; i<expression.length(); i++){
+            char c = expression.charAt(i);
+            if(c == '+' || c == '-' || c == '*'){
+                List<Integer> left = diffWaysToCompute(expression.substring(0, i));
+                List<Integer> right = diffWaysToCompute(expression.substring(i+1));
+                
+                for(int l : left){
+                    for(int r : right){
+                        if(c == '+'){
+                            res.add(l + r);
+                        }else if(c == '-'){
+                            res.add(l - r);
+                        }else if(c == '*'){
+                            res.add(l * r);
+                        }
+                    }
+                }
+            }
+        }
+        if(res.isEmpty()){
+            res.add(Integer.valueOf(expression));
+        }
+        return res;
+    }
+}
+```
+
+# 括号问题
+
+# 单词分解
+
+### 139. Word Break
+
+```java
+class Solution {
+    HashSet<String> set;
+    int[] memo;
+    public boolean wordBreak(String s, List<String> wordDict) {
+        set = new HashSet<>(wordDict);
+        memo = new int[s.length()];
+        Arrays.fill(memo, -1);
+        return dp(0, s, wordDict);
+    }
+    
+    boolean dp(int i, String s, List<String> wordDict){
+        
+        if(i > s.length()-1){
+            return true;
+        }
+        
+        if(memo[i] != -1){
+            return memo[i] == 1 ? true : false;
+        }
+        
+        for(int len = 1; i+len <= s.length(); len++){
+            String prefix = s.substring(i, i+len);
+            if(set.contains(prefix)){
+                boolean subProblem = dp(i+len, s, wordDict);
+                if(subProblem == true){
+                    memo[i] = 1;
+                    return  true;
+                }
+            }
+        }
+        memo[i] = 0;
+        
+        return false;
+        
+    }
+}
+```
+
+
 
 # -----------代码随想录---------
 
@@ -9347,7 +9680,7 @@ class Solution {
 }
 ```
 
-### 是否为合法字符串
+## 是否为合法字符串
 
 Correct variable names consist only of English letters, digits and underscores and they can't start with a digit.
 
@@ -9357,5 +9690,23 @@ Check if the given string is a correct variable name.
 boolean solution(String name) {
     return name.matches("[a-zA-Z_]+[a-zA-Z_0-9]*");
 }
+```
+
+## 最大数字之和
+
+Given array of integers, find the maximal possible sum of some of its `k` consecutive elements.
+
+```java
+int solution(int[] inputArray, int k) {
+    int largestSum = 0, currSum = 0;
+    // use a for loop with an elegant algorithm to avoid nested-loops
+    for (int i = 0; i < inputArray.length; i++) {
+        if ((i - k) >= 0) currSum -= inputArray[i - k]; // start deleting unnecessary elements
+        currSum += inputArray[i]; // add the element to be added
+        if (currSum > largestSum) largestSum = currSum; // check for the largest sum
+    }
+    return largestSum;
+}
+
 ```
 
