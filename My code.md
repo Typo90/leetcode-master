@@ -2,6 +2,86 @@
 
 # =======第一章========
 
+# 经典sort方法
+
+```java
+    public static void main(String[] args) {
+
+        quick_sort q = new quick_sort();
+
+        int[] arr = new int[]{1,6,4,15,3,5,1,2,2};
+        q.Quick_Sort(arr, 0, arr.length-1);
+        for(int i : arr){
+            System.out.println(i);
+        }
+
+    }
+
+    void Quick_Sort(int nums[], int low, int high){
+        int i = low;
+        int j = high;
+        int key = nums[low];
+
+        if(low >= high){
+            return;
+        }
+
+        while(low < high){
+            while(low < high && key <= nums[high]){
+                high--;
+            }
+            if(key > nums[high]){
+                int temp = nums[low];
+                nums[low] = nums[high];
+                nums[high] = temp;
+                low++;
+            }
+            while(low < high && key >= nums[low]){
+                low++;
+            }
+            if(key < nums[low]){
+                int temp = nums[low];
+                nums[low] = nums[high];
+                nums[high] = temp;
+                high--;
+            }
+        }
+        Quick_Sort(nums, i, low-1);
+        Quick_Sort(nums, low+1, j);
+    }
+
+    void Bubble_Sort(int nums[], int n){
+        for(int i = 0; i<n-1; i++){
+            for(int j = 0; j<n-i-1; j++){
+                if(nums[j] > nums[j+1]){
+                    int temp = nums[j];
+                    nums[j] = nums[j+1];
+                    nums[j+1] = temp;
+                }
+            }
+        }
+    }
+
+    void Selection_Sort(int nums[], int n){
+        for(int i = 0; i<n-1; i++){
+            int min = i;
+            for(int j = i+1; j<n; j++){
+                if(nums[j] < nums[min]){
+                    min = j;
+                }
+            }
+
+            if(min != i){
+                int temp = nums[min];
+                nums[min] = nums[i];
+                nums[i] = temp;
+            }
+        }
+    }
+```
+
+
+
 # 团灭nSum
 
 ### 15. 3Sum
@@ -1138,6 +1218,33 @@ class Solution {
 ```
 
 # 滑动窗口
+
+### 3. Longest Substring Without Repeating Characters
+
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int left = 0;
+        int right = 0;
+        int res = 0;
+        HashMap<Character, Integer> window = new HashMap<>();
+        while(right < s.length()){
+            char c = s.charAt(right);
+            right++;
+            window.put(c, window.getOrDefault(c, 0)+1);
+            while(window.get(c)>1){
+                char d = s.charAt(left);
+                left++;
+                window.put(d, window.get(d)-1);
+            }
+            res = Math.max(res, right-left);
+        }
+        return res;
+    }
+}
+```
+
+
 
 ### 76. Minimum Window Substring
 
@@ -3405,6 +3512,58 @@ class Solution {
 }
 ```
 
+## 最大子数组
+
+### 53. Maximum Subarray
+
+```java
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        
+        for(int i = 1; i<dp.length; i++){
+            dp[i] = Math.max(dp[i-1] + nums[i], nums[i]);
+        }
+        
+        int max = Integer.MIN_VALUE;
+        for(int i = 0; i<dp.length; i++){
+            max = Math.max(max, dp[i]);
+        }
+        
+        return max;
+    }
+}
+```
+
+## 最大元素积
+
+### 152. Maximum Product Subarray
+
+```java
+class Solution {
+    public int maxProduct(int[] nums) {
+        int[] dp_max = new int[nums.length];
+        int[] dp_min = new int[nums.length];
+        
+        dp_max[0] = nums[0];
+        dp_min[0] = nums[0];
+        
+        int res = nums[0];
+        
+        for(int i = 1; i<nums.length; i++){
+            dp_max[i] = Math.max(nums[i], Math.max(dp_max[i-1]*nums[i], dp_min[i-1]*nums[i]));
+            dp_min[i] = Math.min(nums[i], Math.min(dp_max[i-1]*nums[i], dp_min[i-1]*nums[i]));
+            res = Math.max(res, dp_max[i]);
+        }
+        
+        return res;
+    }
+}
+```
+
+
+
 ## 最小路径和
 
 ### 64. Minimum Path Sum
@@ -4046,6 +4205,32 @@ class Solution {
 }
 ```
 
+### 11. Container With Most Water
+
+```java
+class Solution {
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length-1;
+        
+        int res = Integer.MIN_VALUE;
+        while(left < right){
+            int curArea = Math.min(height[left], height[right])*(right-left);
+            res = Math.max(res, curArea);
+            if(height[left] < height[right]){
+                left++;
+            }else{
+                right--;
+            }
+        }
+        
+        return res;
+    }
+}
+```
+
+
+
 # 位运算
 
 ## n & (n-1)
@@ -4200,6 +4385,38 @@ class Solution {
         
         return false;
         
+    }
+}
+```
+
+# 连续的数字
+
+### 128. Longest Consecutive Sequence
+
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for(int i : nums){
+            set.add(i);
+        }
+        
+
+        int max = Integer.MIN_VALUE;
+
+        for(int i : nums){
+            if(!set.contains(i-1)){
+                int curNum = i;
+                int curMax = 1;
+                while(set.contains(curNum+1)){
+                    curMax ++;
+                    curNum ++;
+                }
+                max = Math.max(max, curMax);
+            }
+        }
+        
+        return max;
     }
 }
 ```
@@ -9708,5 +9925,110 @@ int solution(int[] inputArray, int k) {
     return largestSum;
 }
 
+```
+
+# Flatiron Health
+
+### 79. Word Search
+
+```java
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        for(int i = 0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(dfs(board, i, j, word, 0)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean dfs(char[][] board, int row, int col, String word, int idx){
+        if(idx >= word.length()){
+            return true;
+        }
+        
+        if(row < 0 || row >= board.length || col < 0 || col >= board[0].length){
+            return false;
+        }
+        
+        if(board[row][col] != word.charAt(idx)){
+            return false;
+        }
+        
+        board[row][col] = '#';
+        int[] rowOff = new int[]{0, 1, 0, -1};
+        int[] colOff = new int[]{1, 0, -1, 0};
+        
+        for(int d = 0; d<4; d++){
+            if(dfs(board, row+rowOff[d], col+colOff[d], word, idx+1)){
+                return true;
+            }
+        }
+        board[row][col] = word.charAt(idx);
+        return false;
+    }
+}
+```
+
+```python
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        m = len(board)
+        n = len(board[0])
+        
+        for i in range(m):
+            for j in range(n):
+                if self.dfs(board, i, j, word, 0):
+                    return True
+        return False
+        
+    def dfs(self, board, row, col, word, idx):
+        if idx >= len(word):
+            return True
+        if row < 0 or row >= len(board) or col < 0 or col >= len(board[0]):
+            return False
+        if board[row][col] != word[idx]:
+            return False
+        
+        board[row][col] = '#'
+        
+        rowOff = [0, 1, 0, -1]
+        colOff = [1, 0, -1, 0]
+        
+        n = 4
+        for d in range(n):
+            if self.dfs(board, row+rowOff[d], col+colOff[d], word, idx+1):
+               return True
+               
+        board[row][col] = word[idx]
+        return False
+```
+
+### 39. Combination Sum
+
+```python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        res = []
+        
+        
+        def backtracking(sum, path, idx):
+            if sum > target:
+                return
+            if sum == target:
+                res.append(list(path))
+                return
+            
+            for i in range(idx, len(candidates)):
+                path.append(candidates[i])
+                backtracking(sum+candidates[i], path, i)
+                path.pop()
+                
+        backtracking(0, [], 0)
+        return res
 ```
 
