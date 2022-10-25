@@ -3057,6 +3057,92 @@ class LRUCache {
  */
 ```
 
+## LFU cache算法
+
+### 460. LFU Cache
+
+```java
+class LFUCache {
+
+    HashMap<Integer, Integer> keyToVal;
+    HashMap<Integer, Integer> keyToFreq;
+    HashMap<Integer, LinkedHashSet<Integer>> freqToKey;
+    int minFreq;
+    int cap;
+    
+    
+    public LFUCache(int capacity) {
+        this.cap = capacity;
+        keyToVal = new HashMap<>();
+        keyToFreq = new HashMap<>();
+        freqToKey = new HashMap<>();
+        this.minFreq = 0;
+    }
+    
+    public int get(int key) {
+        if(!keyToVal.containsKey(key)){
+            return -1;
+        }
+        increaseFreq(key);
+        return keyToVal.get(key);
+    }
+    
+    public void put(int key, int value) {
+        if(this.cap <= 0){
+            return;
+        }
+        
+        if(keyToVal.containsKey(key)){
+            keyToVal.put(key, value);
+            increaseFreq(key);
+            return;
+        }
+        
+        //if key is not exit
+        if(this.cap <= keyToVal.size()){
+            removeMinFreq();
+        }
+        keyToVal.put(key, value);
+        keyToFreq.put(key, 1);
+        freqToKey.putIfAbsent(1, new LinkedHashSet<>());
+        freqToKey.get(1).add(key);
+        this.minFreq = 1;
+    }
+    public void removeMinFreq(){
+        LinkedHashSet<Integer> keyList = freqToKey.get(this.minFreq);
+        int deleteKey = keyList.iterator().next();
+        keyList.remove(deleteKey);
+        if(keyList.isEmpty()){
+            freqToKey.remove(this.minFreq);
+        }
+        keyToVal.remove(deleteKey);
+        keyToFreq.remove(deleteKey);
+    }
+    public void increaseFreq(int key){
+        int freq = keyToFreq.get(key);
+        keyToFreq.put(key, freq+1);
+        freqToKey.get(freq).remove(key);
+        freqToKey.putIfAbsent(freq+1, new LinkedHashSet<>());
+        freqToKey.get(freq+1).add(key);
+        if(freqToKey.get(freq).isEmpty()){
+            freqToKey.remove(freq);
+            if(freq == this.minFreq){
+                this.minFreq++;
+            }
+        }
+    }
+}
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache obj = new LFUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+```
+
+
+
 ## 单调栈
 
 ### 496. Next Greater Element I
